@@ -1,0 +1,264 @@
+{% extends "unfold/layouts/base_simple.html" %}
+{% load static %}
+{% block breadcrumbs %}{% endblock %}
+
+{% comment %}
+  Unfold ships a NARROW precompiled Tailwind bundle — it only contains the utility
+  classes Unfold's own templates use. Big text sizes, most colors, gradients, etc.
+  are silently absent. So this dashboard ships its OWN scoped CSS under `.ga-dash`
+  and uses semantic component classes instead of relying on utilities.
+{% endcomment %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  .ga-dash { --ga-ink:#0D1B4B; --ga-blue:#1565C0; --ga-accent:#00C6FF; }
+  .ga-dash { max-width: 1400px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+  .ga-dash * { box-sizing: border-box; }
+
+  /* Layout */
+  .ga-row { display:grid; gap:1rem; margin-bottom:1.5rem; }
+  .ga-row-3 { grid-template-columns: 2fr 1fr; }
+  .ga-row-kpi { grid-template-columns: repeat(3, 1fr); }
+  .ga-row-2 { grid-template-columns: 1fr 1fr; }
+  .ga-row-conv { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  @media (max-width: 900px) {
+    .ga-row-3, .ga-row-kpi, .ga-row-2 { grid-template-columns: 1fr; }
+  }
+
+  /* Header */
+  .ga-head { display:flex; align-items:center; justify-content:space-between;
+             flex-wrap:wrap; gap:.75rem; margin-bottom:1.25rem; }
+  .ga-head h1 { font-size:1.6rem; font-weight:800; margin:0; color:var(--ga-ink); }
+  .ga-refresh { display:inline-flex; align-items:center; gap:.4rem; text-decoration:none;
+                background:var(--ga-blue); color:#fff !important; font-weight:600;
+                padding:.5rem .9rem; border-radius:10px; font-size:.85rem;
+                transition:background .15s; }
+  .ga-refresh:hover { background:#0d4ea0; }
+  .ga-refresh .material-symbols-outlined { font-size:18px; }
+
+  /* Cards */
+  .ga-card { background:#fff; border:1px solid #f3f4f6; border-radius:16px; padding:1.25rem;
+             box-shadow:0 1px 3px rgba(0,0,0,.06); transition:transform .15s, box-shadow .15s; }
+  .ga-card:hover { transform:translateY(-2px); box-shadow:0 10px 25px -5px rgba(0,0,0,.12); }
+  .ga-card-label { font-size:.72rem; letter-spacing:.06em; text-transform:uppercase;
+                   color:#8A94B0; font-weight:700; margin:0 0 .35rem; }
+  .ga-card-value { font-size:2.6rem; font-weight:800; line-height:1; color:var(--ga-ink);
+                   font-variant-numeric:tabular-nums; }
+  .ga-card-sub { font-size:.8rem; color:#8A94B0; margin-top:.3rem; }
+
+  /* Hero (gradient) cards — SEPARATE class; .ga-card's white bg would kill the gradient */
+  .ga-hero { border:none; border-radius:16px; color:#fff; padding:1.5rem; position:relative;
+             overflow:hidden; box-shadow:0 10px 25px -5px rgba(0,0,0,.2); }
+  .ga-hero-primary { background:linear-gradient(135deg,#0D1B4B 0%,#1565C0 100%); }
+  .ga-hero-accent  { background:linear-gradient(135deg,#132260 0%,#00C6FF 100%); }
+  .ga-hero-label { font-size:.75rem; letter-spacing:.06em; text-transform:uppercase;
+                   opacity:.85; font-weight:700; margin:0; }
+  .ga-hero-value { font-size:4rem; font-weight:900; line-height:1; margin:.25rem 0;
+                   font-variant-numeric:tabular-nums; }
+  .ga-hero-sub { font-size:.85rem; opacity:.8; }
+
+  /* Live dot */
+  .ga-live { display:inline-flex; align-items:center; gap:.4rem; }
+  .ga-dot { position:relative; width:10px; height:10px; }
+  .ga-dot span { position:absolute; inset:0; border-radius:9999px; background:#10b981; }
+  .ga-dot .ring { animation: ga-ping 1.4s cubic-bezier(0,0,.2,1) infinite; }
+  @keyframes ga-ping { 0%{transform:scale(1);opacity:.75} 75%,100%{transform:scale(2.6);opacity:0} }
+
+  /* KPI split */
+  .ga-kpi-split { display:flex; gap:1.25rem; }
+  .ga-kpi-split > div { flex:1; }
+
+  /* Bars */
+  .ga-list { list-style:none; margin:0; padding:0; }
+  .ga-list li { margin-bottom:.85rem; }
+  .ga-list li:last-child { margin-bottom:0; }
+  .ga-bar-top { display:flex; justify-content:space-between; font-size:.85rem;
+                margin-bottom:.3rem; gap:1rem; }
+  .ga-bar-name { color:#3A4468; font-weight:600; overflow:hidden; text-overflow:ellipsis;
+                 white-space:nowrap; }
+  .ga-bar-val { color:var(--ga-ink); font-weight:700; font-variant-numeric:tabular-nums; }
+  .ga-bar-track { height:6px; background:#f3f4f6; border-radius:9999px; overflow:hidden; }
+  .ga-bar-fill { height:100%; border-radius:9999px;
+                 background:linear-gradient(90deg,#1565C0,#00C6FF);
+                 transition:width .6s cubic-bezier(.2,.8,.2,1); }
+
+  /* Stacked device bar + legend */
+  .ga-stack { display:flex; height:14px; border-radius:9999px; overflow:hidden; background:#f3f4f6; }
+  .ga-stack span { height:100%; }
+  .ga-legend { list-style:none; padding:0; margin:1rem 0 0; display:flex; flex-wrap:wrap; gap:1rem; }
+  .ga-legend li { display:flex; align-items:center; gap:.45rem; font-size:.85rem; color:#3A4468; }
+  .ga-legend .swatch { width:10px; height:10px; border-radius:3px; }
+
+  /* Conversion cards */
+  .ga-conv { display:flex; align-items:center; gap:.9rem; }
+  .ga-conv .material-symbols-outlined { font-size:28px; color:var(--ga-blue); }
+  .ga-conv-count { font-size:2rem; font-weight:800; line-height:1; color:var(--ga-ink);
+                   font-variant-numeric:tabular-nums; }
+  .ga-badge { display:inline-block; font-size:.65rem; font-weight:700; text-transform:uppercase;
+              letter-spacing:.05em; background:#10b981; color:#fff; padding:2px 7px;
+              border-radius:9999px; margin-left:.5rem; }
+
+  .ga-section-title { font-size:.95rem; font-weight:700; color:var(--ga-ink); margin:0 0 1rem; }
+
+  /* Error banner */
+  .ga-error { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; border-radius:12px;
+              padding:1rem 1.25rem; margin-bottom:1.5rem; font-size:.9rem; }
+  .ga-error code { background:#fff; padding:1px 5px; border-radius:4px; }
+
+  /* Dark mode (Unfold toggles .dark on <html>) */
+  html.dark .ga-dash { --ga-ink:#e5e7eb; }
+  html.dark .ga-head h1 { color:#f9fafb; }
+  html.dark .ga-card { background:#111827; border-color:#1f2937; }
+  html.dark .ga-card-value, html.dark .ga-bar-val, html.dark .ga-conv-count,
+  html.dark .ga-section-title { color:#f9fafb; }
+  html.dark .ga-bar-name { color:#9ca3af; }
+  html.dark .ga-bar-track, html.dark .ga-stack { background:#1f2937; }
+  html.dark .ga-legend li { color:#9ca3af; }
+  html.dark .ga-error { background:#3f1d1d; border-color:#7f1d1d; color:#fecaca; }
+  html.dark .ga-error code { background:#1f2937; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ga-dash">
+
+  <div class="ga-head">
+    <h1>Analytics Overview</h1>
+    <a class="ga-refresh" href="?refresh=1">
+      <span class="material-symbols-outlined">refresh</span> Refresh data
+    </a>
+  </div>
+
+  {% if error %}
+  <div class="ga-error">
+    <strong>Couldn't load analytics.</strong> {{ error }}
+    <div style="margin-top:.4rem;">If this mentions an expired or invalid token, re-run
+      <code>ga_capture_token</code> (the OAuth app must be "In production", not "Testing").</div>
+  </div>
+  {% else %}
+
+  <!-- Hero row -->
+  <div class="ga-row ga-row-3">
+    <div class="ga-hero ga-hero-primary">
+      <p class="ga-hero-label ga-live">
+        <span class="ga-dot"><span class="ring"></span><span></span></span> Realtime — active now
+      </p>
+      <div class="ga-hero-value">{{ realtime_users }}</div>
+      <div class="ga-hero-sub">users on the site in the last few minutes</div>
+    </div>
+    <div class="ga-hero ga-hero-accent">
+      <p class="ga-hero-label">Conversions (30d)</p>
+      <div class="ga-hero-value">{{ total_conversions }}</div>
+      <div class="ga-hero-sub">form submissions in the last 30 days</div>
+    </div>
+  </div>
+
+  <!-- Traffic over time -->
+  <div class="ga-row ga-row-kpi">
+    {% for card in traffic_cards %}
+    <div class="ga-card">
+      <p class="ga-card-label">{{ card.window }}</p>
+      <div class="ga-kpi-split">
+        <div>
+          <div class="ga-card-value">{{ card.users }}</div>
+          <div class="ga-card-sub">Users</div>
+        </div>
+        <div>
+          <div class="ga-card-value">{{ card.views }}</div>
+          <div class="ga-card-sub">Page views</div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Top pages + sources -->
+  <div class="ga-row ga-row-2">
+    <div class="ga-card">
+      <p class="ga-section-title">Top Pages (7 days)</p>
+      <ul class="ga-list">
+        {% for p in top_pages %}
+        <li>
+          <div class="ga-bar-top">
+            <span class="ga-bar-name" title="{{ p.detail }}">{{ p.name }}</span>
+            <span class="ga-bar-val">{{ p.value }}</span>
+          </div>
+          <div class="ga-bar-track">
+            <div class="ga-bar-fill" style="width:{% widthratio p.value max_page_views 100 %}%"></div>
+          </div>
+        </li>
+        {% empty %}<li class="ga-bar-name">No page data yet.</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="ga-card">
+      <p class="ga-section-title">Traffic Sources (7 days)</p>
+      <ul class="ga-list">
+        {% for s in top_sources %}
+        <li>
+          <div class="ga-bar-top">
+            <span class="ga-bar-name">{{ s.name }}</span>
+            <span class="ga-bar-val">{{ s.value }}</span>
+          </div>
+          <div class="ga-bar-track">
+            <div class="ga-bar-fill" style="width:{% widthratio s.value max_source_sessions 100 %}%"></div>
+          </div>
+        </li>
+        {% empty %}<li class="ga-bar-name">No source data yet.</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Countries + devices -->
+  <div class="ga-row ga-row-2">
+    <div class="ga-card">
+      <p class="ga-section-title">Top Countries (30 days)</p>
+      <ul class="ga-list">
+        {% for c in top_countries %}
+        <li>
+          <div class="ga-bar-top">
+            <span class="ga-bar-name">{{ c.name }}</span>
+            <span class="ga-bar-val">{{ c.value }}</span>
+          </div>
+          <div class="ga-bar-track">
+            <div class="ga-bar-fill" style="width:{% widthratio c.value max_country_users 100 %}%"></div>
+          </div>
+        </li>
+        {% empty %}<li class="ga-bar-name">No country data yet.</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="ga-card">
+      <p class="ga-section-title">Devices (30 days)</p>
+      {# Inline per-segment colors — utility classes might be dropped by the narrow bundle #}
+      <div class="ga-stack">
+        {% for d in devices %}
+        <span style="width:{% widthratio d.value device_total 100 %}%;
+              background:{% cycle '#1565C0' '#00C6FF' '#132260' '#8A94B0' as device_color %}"></span>
+        {% endfor %}
+      </div>
+      {% resetcycle device_color %}
+      <ul class="ga-legend">
+        {% for d in devices %}
+        <li><span class="swatch" style="background:{% cycle '#1565C0' '#00C6FF' '#132260' '#8A94B0' as device_color2 %}"></span>
+            {{ d.name }} — {{ d.value }}</li>
+        {% empty %}<li class="ga-bar-name">No device data yet.</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Conversion events -->
+  <p class="ga-section-title">Conversion Events (30 days)</p>
+  <div class="ga-row ga-row-conv">
+    {% for conv in conversions %}
+    <div class="ga-card ga-conv">
+      <span class="material-symbols-outlined">{{ conv.icon }}</span>
+      <div>
+        <div class="ga-conv-count">{{ conv.count }}{% if conv.count > 0 %}<span class="ga-badge">live</span>{% endif %}</div>
+        <div class="ga-card-sub">{{ conv.label }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% endif %}
+</div>
+{% endblock %}

@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "apps.services",
     "apps.industries",
     "apps.contact",
+    "apps.analytics",
 ]
 
 MIDDLEWARE = [
@@ -116,6 +117,14 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL", "BJP Technologies <info@bjptechnologies.co.tz>"
 )
 CONTACT_EMAIL = os.environ.get("CONTACT_EMAIL", "info@bjptechnologies.co.tz")
+
+# --- Google Analytics Data API (Phase 2 — in-admin dashboard) ---
+# The Measurement ID (G-…) for the client-side tag lives in SiteSettings, not here.
+# These are the server-side Data API credentials (numeric Property ID + OAuth token).
+GA_PROPERTY_ID = os.environ.get("GA_PROPERTY_ID", "")
+GA_OAUTH_CLIENT_ID = os.environ.get("GA_OAUTH_CLIENT_ID", "")
+GA_OAUTH_CLIENT_SECRET = os.environ.get("GA_OAUTH_CLIENT_SECRET", "")
+GA_OAUTH_REFRESH_TOKEN = os.environ.get("GA_OAUTH_REFRESH_TOKEN", "")
 
 # --- Django Unfold Admin ---
 
@@ -282,6 +291,11 @@ UNFOLD = {
                 "separator": True,
                 "collapsible": True,
                 "items": [
+                    {
+                        "title": "Overview",
+                        "icon": "insights",
+                        "link": reverse_lazy("admin:analytics_analyticsoverview_changelist"),
+                    },
                     {
                         "title": "Google Analytics",
                         "icon": "analytics",
