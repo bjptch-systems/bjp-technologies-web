@@ -1010,3 +1010,82 @@ TEMPLATE FOR NEXT SESSION — copy this block and fill in:
 - [ ] Upload logo via admin panel on production after migration
 
 ---
+
+## Session 14 — 2026-05-27 ~14:30 EAT
+
+**Goal:** Integrate Google Analytics 4 end to end — the tracking tag, conversion events, and an in-admin analytics dashboard — following `docs/ga4-integration-playbook.md`.
+**Branch:** feature/ga4-phase1-tracking (Phase 1, merged) and feature/ga4-phase2-dashboard (Phase 2)
+**Status:** ✅ Complete (code) — pending production deploy + env vars
+
+> Note: Session 13 was the automated-deploy/webhook work (documented as `docs/BJP_Technologies_Session13_Report.pdf`); this is Session 14.
+
+### What Was Done
+
+**Phase 1 — the tracking tag (branch `feature/ga4-phase1-tracking`, merged via PR #62):**
+- Added `ga_measurement_id` + `ga_enabled` fields to `SiteSettings` (the pk=1 singleton)
+- Seed migration `0008_seed_ga_measurement_id` pins Measurement ID `G-C9L66H4VE4` on first deploy (uses pk=1, not the playbook's UUID — adapted to this repo)
+- `company_info` context processor now exposes `analytics_enabled` = `not DEBUG and ga_enabled and bool(ga_measurement_id)`
+- gtag.js injected in `core/base.html` `<head>`; conversion-event block fires before `</body>`
+- `ContactSuccessView` fires `contact_submit` conversion event (adapted: this site redirects to a separate success page rather than inline-rendering)
+- `AnalyticsSettings` proxy model + admin + Unfold sidebar entry ("Google Analytics")
+- 6 tests covering tag injection, the three kill-switches (DEBUG / switch off / blank ID), and conversion events
+
+**Phase 2 — the in-admin dashboard (branch `feature/ga4-phase2-dashboard`):**
+- Added Google Data API deps to `requirements.txt` (google-analytics-data, google-auth, google-auth-oauthlib)
+- `GA_PROPERTY_ID` + `GA_OAUTH_*` settings (server-side Data API credentials, via os.environ)
+- `ga_capture_token` management command — one-time OAuth refresh-token capture; `ga_verify` — credential smoke test
+- New `apps/analytics/` app: `services.py` (single cached gateway, quota-safe TTLs, `rows[0]` handling, `bypass_cache` for the Refresh button), virtual `AnalyticsOverview` model, `AnalyticsOverviewAdmin.changelist_view` rendering the dashboard inside admin chrome via `each_context()`
+- `overview.html` with scoped `.ga-dash` CSS (Unfold ships a narrow Tailwind bundle that drops most utilities), `not_configured.html` fallback
+- Dashboard: realtime active users, traffic KPIs (today/7d/30d), top pages/sources/countries, device split, `contact_submit` conversions
+- Registered app + Unfold sidebar "Overview" entry
+- 13 tests: context-builder shape, empty-data + error paths, `rows[0]` regression, admin-chrome regression, permissions
+- Verified live: `ga_verify` returns `✓ Auth works`; `_build_dashboard_context()` runs clean against the real API (zeros — property <48h old); dashboard rendered + screenshotted in admin (chrome intact, gradients survived)
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| docs/ga4-integration-playbook.md | Added | Portable GA4 reference (the spec for this work) |
+| apps/core/models.py | Modified | `ga_measurement_id`, `ga_enabled` + `AnalyticsSettings` proxy |
+| apps/core/admin.py | Modified | `AnalyticsSettingsAdmin` |
+| apps/core/context_processors.py | Modified | `analytics_enabled` flag |
+| apps/core/templates/core/base.html | Modified | gtag.js + conversion-event block |
+| apps/contact/views.py | Modified | `ContactSuccessView` fires `contact_submit` |
+| apps/core/migrations/0007_*.py, 0008_*.py | Created | Fields + seed migration |
+| apps/core/management/commands/ga_capture_token.py, ga_verify.py | Created | OAuth token capture + verify |
+| requirements.txt, .env.example | Modified | Google deps + GA_* env vars |
+| config/settings/base.py | Modified | GA_* settings, `apps.analytics`, Unfold Analytics sidebar group |
+| apps/analytics/ (full app) | Created | services, models, admin, templates, tests |
+
+### Migrations
+- `core/0007_analyticssettings_sitesettings_ga_enabled_and_more` — applied locally ✅
+- `core/0008_seed_ga_measurement_id` — applied locally ✅
+- `analytics/0001_initial` — applied locally ✅
+- **Server note:** CI/CD `migrate` on deploy creates the analytics table + runs the seed
+
+### Tests
+- Tests written: 19 new (6 Phase 1 + 13 Phase 2)
+- Tests passing: 86 / 86
+- Coverage areas: context processor, tag rendering, conversion events, service layer (rows[0] regression), dashboard admin (chrome regression, empty/error paths), permissions
+- ruff clean; black clean on all new files
+
+### Decisions Made
+- **Decision:** Seed migration targets pk=1, not the playbook's UUID.
+  **Reason:** This repo's `SiteSettings` forces integer pk=1 in `save()` — the playbook's UUID singleton doesn't apply here.
+- **Decision:** Fire the conversion event in `ContactSuccessView`, not inline on form render.
+  **Reason:** Contact uses `FormView` → redirect to a separate success page; there is no inline success-render to attach `ga_event` to.
+- **Decision:** OAuth user-token (not a service account).
+  **Reason:** GA4 won't attach a service account to a personal-Gmail-owned property (playbook §0). Authenticate as the GA4 admin via a Desktop OAuth client; refresh token stored in env.
+- **Decision:** Ship scoped `.ga-dash` raw CSS instead of Tailwind utilities.
+  **Reason:** Unfold's precompiled Tailwind bundle silently drops most utility classes — the documented trap (playbook §8.1). Verified the dashboard renders correctly via browser screenshot.
+
+### Blockers / Issues
+- Dashboard shows zeros because the GA4 property is < 48h old — standard reports lag 24–48h on first data. Realtime confirms data arrival immediately. Not a bug; resolves with time.
+
+### Next Session Should
+- [ ] PR `feature/ga4-phase2-dashboard → develop → main` to deploy the dashboard
+- [ ] Add the four `GA_*` env vars in cPanel (Setup Python App → Environment variables) — dashboard shows "Setup Required" until then
+- [ ] Confirm GA4 OAuth consent screen is "In production" (not Testing) so the refresh token never expires
+- [ ] Mark `contact_submit` as a Key Event in GA4; add internal-traffic filter for the office IP
+- [ ] After ~48h, confirm the dashboard shows real numbers; hit Refresh data to bust the cache
+
+---
