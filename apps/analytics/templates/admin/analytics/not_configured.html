@@ -1,0 +1,37 @@
+{% extends "unfold/layouts/base_simple.html" %}
+{% block breadcrumbs %}{% endblock %}
+
+{% block extrastyle %}{{ block.super }}
+<style>
+  .ga-setup { max-width: 760px; margin: 0 auto; padding: 2rem 1rem; }
+  .ga-setup h1 { font-size: 1.6rem; font-weight: 800; margin-bottom: .5rem; }
+  .ga-setup p { color: #6b7280; margin-bottom: 1.25rem; }
+  .ga-setup ol { padding-left: 1.25rem; }
+  .ga-setup li { margin-bottom: .5rem; }
+  .ga-setup code { background:#f3f4f6; padding:2px 6px; border-radius:6px; font-size:.85em; }
+  html.dark .ga-setup p { color:#9ca3af; }
+  html.dark .ga-setup code { background:#1f2937; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ga-setup">
+  <h1>Analytics — Setup Required</h1>
+  <p>The GA4 Data API credentials are not configured on this server, so the dashboard
+     can't read your analytics yet. Add the four environment variables below, then reload.</p>
+
+  <ol>
+    <li><code>GA_PROPERTY_ID</code> — the numeric GA4 Property ID</li>
+    <li><code>GA_OAUTH_CLIENT_ID</code></li>
+    <li><code>GA_OAUTH_CLIENT_SECRET</code></li>
+    <li><code>GA_OAUTH_REFRESH_TOKEN</code></li>
+  </ol>
+
+  <p>To generate the OAuth values, run this once locally and paste the output into the
+     server's environment variables:</p>
+  <p><code>python manage.py ga_capture_token /path/to/oauth-client.json</code></p>
+
+  <p>Then confirm the credentials work with:</p>
+  <p><code>python manage.py ga_verify</code></p>
+</div>
+{% endblock %}

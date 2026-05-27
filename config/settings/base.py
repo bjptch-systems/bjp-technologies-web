@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "apps.services",
     "apps.industries",
     "apps.contact",
+    "apps.analytics",
 ]
 
 MIDDLEWARE = [
@@ -290,6 +291,11 @@ UNFOLD = {
                 "separator": True,
                 "collapsible": True,
                 "items": [
+                    {
+                        "title": "Overview",
+                        "icon": "insights",
+                        "link": reverse_lazy("admin:analytics_analyticsoverview_changelist"),
+                    },
                     {
                         "title": "Google Analytics",
                         "icon": "analytics",
