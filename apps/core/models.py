@@ -157,6 +157,21 @@ class SiteSettings(models.Model):
     )
     footer_cta_button = models.CharField(max_length=60, default="Get Free Consultation")
 
+    # Google Analytics (GA4)
+    ga_measurement_id = models.CharField(
+        max_length=20,
+        blank=True,
+        default="",
+        help_text="GA4 Measurement ID (starts with G-). Leave blank to disable tracking.",
+    )
+    ga_enabled = models.BooleanField(
+        default=True,
+        help_text=(
+            "Master switch — uncheck to disable analytics site-wide without removing the ID. "
+            "Tracking is also suppressed automatically when DEBUG is on (local development)."
+        ),
+    )
+
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -258,3 +273,10 @@ class LogoBrandingSettings(SiteSettings):
         proxy = True
         verbose_name = "Logo & Branding"
         verbose_name_plural = "Logo & Branding"
+
+
+class AnalyticsSettings(SiteSettings):
+    class Meta:
+        proxy = True
+        verbose_name = "Google Analytics"
+        verbose_name_plural = "Google Analytics"

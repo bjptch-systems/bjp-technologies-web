@@ -5,6 +5,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% if analytics_enabled %}
+    <!-- Google tag (gtag.js) — GA4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ company.ga_measurement_id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ company.ga_measurement_id }}');
+    </script>
+    {% endif %}
+
     <meta name="description" content="{% block meta_description %}BJP Technologies (T) Limited — Secure Technology. Scalable Growth. Professional IT solutions in Tanzania.{% endblock %}">
     <meta name="keywords" content="{% block meta_keywords %}IT solutions Tanzania, cybersecurity, cloud, software development, Dar es Salaam{% endblock %}">
 
@@ -127,6 +139,15 @@
 <script defer src="{% static 'js/main.js' %}"></script>
 
 {% block extra_js %}{% endblock %}
+
+{% if analytics_enabled and ga_event %}
+<!-- GA4 conversion event — fired on success pages (e.g. contact form submitted) -->
+<script>
+  if (typeof gtag === 'function') {
+    gtag('event', '{{ ga_event|escapejs }}'{% if ga_event_params %}, {{ ga_event_params|safe }}{% endif %});
+  }
+</script>
+{% endif %}
 
 </body>
 </html>

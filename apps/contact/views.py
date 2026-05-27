@@ -100,3 +100,10 @@ class ContactView(FormView):
 
 class ContactSuccessView(TemplateView):
     template_name = "contact/success.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Fire the GA4 conversion event on the success page. The base template
+        # only emits the gtag('event', ...) call when analytics_enabled is true.
+        context["ga_event"] = "contact_submit"
+        return context
