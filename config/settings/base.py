@@ -278,6 +278,18 @@ UNFOLD = {
                 ],
             },
             {
+                "title": "Analytics",
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": "Google Analytics",
+                        "icon": "analytics",
+                        "link": reverse_lazy("admin:core_analyticssettings_changelist"),
+                    },
+                ],
+            },
+            {
                 "title": "Administration",
                 "separator": True,
                 "items": [

@@ -12,6 +12,7 @@ from .models import (
     AboutPageSettings,
     AboutStripSettings,
     AddressSettings,
+    AnalyticsSettings,
     CompanyIdentitySettings,
     ContactPageSettings,
     FooterCTASettings,
@@ -288,3 +289,20 @@ class LogoBrandingSettingsAdmin(_SiteSettingsSectionAdmin):
         return "No favicon uploaded — site is using the default static favicon files."
 
     favicon_preview.short_description = "Current Favicon Preview"
+
+
+@admin.register(AnalyticsSettings)
+class AnalyticsSettingsAdmin(_SiteSettingsSectionAdmin):
+    fieldsets = (
+        (
+            "Google Analytics (GA4)",
+            {
+                "fields": ("ga_measurement_id", "ga_enabled"),
+                "description": (
+                    "The GA4 tracking tag is injected on every public page when enabled. "
+                    "It is suppressed automatically while DEBUG is on (local development), "
+                    "so your own dev traffic never pollutes production statistics."
+                ),
+            },
+        ),
+    )
