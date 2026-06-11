@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "apps.industries",
     "apps.contact",
     "apps.analytics",
+    "apps.products",
 ]
 
 MIDDLEWARE = [
@@ -195,6 +196,11 @@ UNFOLD = {
                 "title": "Website Content",
                 "separator": True,
                 "items": [
+                    {
+                        "title": "Products",
+                        "icon": "inventory_2",
+                        "link": reverse_lazy("admin:products_product_changelist"),
+                    },
                     {
                         "title": "Services",
                         "icon": "list",

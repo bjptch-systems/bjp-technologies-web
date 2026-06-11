@@ -50,8 +50,15 @@ htmlcov/
 *.jpg
 *.jpeg
 
+# But always track image assets that are part of the site itself
+!static/**/*.png
+!static/**/*.jpg
+!static/**/*.jpeg
+
 # Scratch / reference folders (not part of the project)
 luminos/
+pms details/
+bms details/
 
 # Test output files
 *.txt

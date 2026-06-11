@@ -22,6 +22,10 @@
                                     <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}"
                                        href="{% url 'main:about' %}">About</a>
                                 </li>
+                                <li>
+                                    <a class="nav-link {% if request.resolver_match.namespace == 'products' %}active{% endif %}"
+                                       href="{% url 'products:list' %}">Products</a>
+                                </li>
                                 <li class="has-dropdown">
                                     <a class="nav-link" href="{% url 'services:list' %}">
                                         Services
