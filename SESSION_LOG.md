@@ -1089,3 +1089,91 @@ TEMPLATE FOR NEXT SESSION — copy this block and fill in:
 - [ ] After ~48h, confirm the dashboard shows real numbers; hit Refresh data to bust the cache
 
 ---
+
+## Session 15 — 2026-06-11 EAT
+
+**Goal:** Add a Products module to the BJP Technologies website and ship the PMS (Property Management System) product page as the first record.
+**Branch:** `feature/products-module-pms` (off `develop`)
+**Status:** ✅ Complete (Phase 6.5 — Products Module — PMS leg)
+
+### What Was Done
+- Phase 6.5 opened in CLAUDE.md Section 22 as a scope expansion off Phase 6 — Products Module, with PMS as the first product.
+- New Django app `apps/products/` with `Product` model inheriting `BaseModel` (UUID pk, timestamps), covering: identity (name, slug, tagline, byline, live_url, status), descriptions (short/long), detail sections (problem_statements, target_users, features JSON, differentiators, how_it_works_steps, pricing_summary, onboarding_promise), CTAs (primary + secondary label/URL pairs), optional contact block (email, phone, hours, WhatsApp — rendered conditionally), SEO (meta_title, meta_description), assets (hero_image, og_image, logo_image, accent_color, screenshots JSON), and ordering.
+- Status choices: `live` / `coming-soon`. Public views filter to live only; coming-soon detail returns 404.
+- Migration `0001_initial` (auto) + data migration `0002_seed_pms` seeded the PMS record from the team brief at `pms details/bjp-feature-brief.md`. Idempotent — re-running does nothing if `slug='pms'` exists.
+- Rich Unfold-themed `ProductAdmin` with fieldsets (Identity, Descriptions, Detail page sections, CTAs, Contact block (collapse), SEO (collapse), Assets, Advanced (collapse)), status badge, contact-state indicator, view-on-site link, edit/delete buttons, and Live ↔ Coming Soon bulk actions.
+- New Unfold sidebar item "Products" added as the first entry under Website Content (before Services).
+- Views `ProductsListView` + `ProductDetailView` at `/products/` and `/products/<slug>/`, both restricted to live products.
+- URL namespace `products` registered in `config/urls.py` between `main` and `services` so the URL hierarchy mirrors the navbar.
+- Sitemap updated: new `ProductSitemap` (priority 0.8, monthly) + `products:list` added to `StaticViewSitemap`.
+- "Products" link added to both the main navbar (`apps/core/templates/core/navbar.html`) and the mobile sidebar (`apps/core/templates/core/base.html`) as the first item after About, before Services.
+- Home page (`apps/main/templates/main/home.html`) gained an "Our Products" strip rendered between hero and Services, hidden when no live products exist. `HomeView` extended to provide `products` context.
+- Detail page template loads Bootstrap Icons via CDN inside `{% block extra_css %}` (only paid on product detail pages, not site-wide).
+- PMS assets (7 files: hero, 4 features, OG card, logo SVG) copied from `pms details/bjp-feature-assets/` into `static/images/products/pms/`.
+- `.gitignore` updated: `pms details/` and `bms details/` added as untracked source folders; negation pattern `!static/**/*.png|jpg|jpeg` added so site image assets are not blocked by the broad `*.png` rule (which exists to block loose screenshots in repo root).
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| `apps/products/__init__.py`, `apps.py`, `migrations/__init__.py`, `tests/__init__.py` | Created | App scaffold |
+| `apps/products/models.py` | Created | `Product(BaseModel)` with 25 fields + helpers |
+| `apps/products/migrations/0001_initial.py` | Created | Schema |
+| `apps/products/migrations/0002_seed_pms.py` | Created | PMS data, idempotent |
+| `apps/products/admin.py` | Created | Unfold `ProductAdmin` with fieldsets + bulk actions |
+| `apps/products/views.py` | Created | `ProductsListView` + `ProductDetailView` |
+| `apps/products/urls.py` | Created | `products:list` + `products:detail` |
+| `apps/products/templates/products/list.html` | Created | Banner + 2-col card grid |
+| `apps/products/templates/products/detail.html` | Created | Hero, problem, differentiators, features grid, target users, how-it-works, screenshots, pricing, conditional contact, CTAs |
+| `apps/products/tests/test_models.py` | Created | 24 model tests |
+| `apps/products/tests/test_views.py` | Created | 18 view/integration tests |
+| `apps/main/views.py` | Modified | Added `products` to `HomeView` context |
+| `apps/main/templates/main/home.html` | Modified | Inserted "Our Products" strip |
+| `apps/core/templates/core/navbar.html` | Modified | Added Products link before Services |
+| `apps/core/templates/core/base.html` | Modified | Added Products to mobile sidebar |
+| `apps/core/sitemaps.py` | Modified | Added `ProductSitemap` |
+| `config/urls.py` | Modified | Registered `apps.products.urls` and `ProductSitemap` |
+| `config/settings/base.py` | Modified | Added `apps.products` to INSTALLED_APPS; added Products to Unfold sidebar as first item under Website Content |
+| `.gitignore` | Modified | Excluded `pms details/` + `bms details/`; added `!static/**/*.png` negation |
+| `static/images/products/pms/*.{png,svg}` | Added | 7 PMS assets |
+
+### Migrations
+- `products/0001_initial` — applied locally ✅
+- `products/0002_seed_pms` — applied locally ✅
+- **Server note:** CI/CD `migrate` on deploy creates the products table + seeds PMS
+
+### Tests
+- Tests written: 42 new (24 model + 18 view/integration)
+- Tests passing: 128 / 128 (entire suite)
+- Coverage areas: Product model (`__str__`, slug auto-gen, `is_live`, `has_contact_block`, list helpers, JSON features), seeded PMS record (exists, live, feature count, contact block empty by default, CTA URLs), list view (live-only filter), detail view (404 for missing/coming-soon, conditional contact block render), navbar integration (Products link on home), home-page strip
+- ruff clean; black clean on all new files
+- Manual smoke: home/products/pms detail all 200; bad slug 404; sitemap includes `/products/` + `/products/pms/`
+
+### Decisions Made
+- **Decision:** Build the full `apps/products/` app with model + admin instead of a single hardcoded `/products/pms/` page.
+  **Reason:** A second product (BMS) is already ready and confirmed — a hardcoded one-off would mean rebuilding within a week. The full app pays off the moment Product #2 lands.
+- **Decision:** Assets stored as relative-path `CharField`s under `static/images/`, not `ImageField`/`FileField` uploads.
+  **Reason:** Mirrors the existing `Service.icon_svg` pattern in this repo, keeps assets git-tracked alongside the code, and avoids the media/static dual-storage complexity. The admin form takes a path string; when BJP wants self-serve uploads later, this can be migrated to `ImageField` with `upload_to='products/'`.
+- **Decision:** CTAs both link directly to `pms.bjptechnologies.co.tz` (external, new tab) — no BJP contact-form intermediate.
+  **Reason:** User decision captured in pre-build confirmation. The PMS product owns its own demo-request flow; bouncing leads through the BJP contact form would add friction.
+- **Decision:** Contact block (email, phone, hours, WhatsApp) renders conditionally, hidden until `has_contact_block` is true.
+  **Reason:** The brief explicitly lists Section 12 contact details as `⚠️ TODO`. Field exists on the model so BJP can fill them in via admin without redeploy. Until then the block is invisible — no placeholder text shipped to users.
+- **Decision:** Bootstrap Icons loaded via CDN inside `{% block extra_css %}` on the detail template only — not site-wide in `base.html`.
+  **Reason:** Only the product detail page needs `bi-*` classes (for the features grid). Loading site-wide would cost every other page bandwidth they don't need.
+- **Decision:** Status filter at view level (not just admin), so `coming-soon` products return 404 on the public site.
+  **Reason:** Lets BJP draft product #3 in admin without it leaking to users until they flip the switch.
+- **Decision:** Products is the first item under Website Content in the Unfold sidebar and the first nav item after About in the public navbar.
+  **Reason:** Per user direction during planning — "products should lead first".
+
+### Blockers / Issues
+- None functionally. Awaiting:
+  - PMS contact details (email, phone, hours, WhatsApp) from BJP to populate via admin
+  - Final PMS logo (current is a placeholder wordmark per brief §14)
+
+### Next Session Should
+- [ ] Merge PR `feature/products-module-pms → develop`
+- [ ] After merging to develop, open develop → main PR to push live
+- [ ] Verify live: nav shows Products, home shows the PMS strip, `/products/pms/` renders end-to-end
+- [ ] Fill in PMS contact block from admin (Site → Products → PMS) once BJP provides values
+- [ ] Start `feature/products-module-bms` — much smaller scope: just a new data-migration seeding the BMS record + assets
+
+---

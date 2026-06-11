@@ -754,6 +754,7 @@ The BJP Technologies website is being built in structured phases. Claude Code mu
 | **Phase 4** | Contact System | Contact form, model, email notifications, admin | ✅ Complete |
 | **Phase 5** | Admin & CMS | Django admin configuration, content management | ✅ Complete |
 | **Phase 6** | Polish & Launch | SEO, performance, security audit, go-live | 🔄 Current |
+| **Phase 6.5** | Products Module | New `apps/products/` app, navbar tab, home strip, PMS + BMS product detail pages | 🔄 Current |
 
 ---
 
@@ -862,6 +863,25 @@ Pushing to `main` on GitHub automatically deploys to `technologies.bejundas.co.t
 
 ---
 
+### Phase 6.5 — Products Module
+**Goal:** Surface BJP's productized software (PMS, BMS, etc.) as a first-class section of the website. Scope expansion off Phase 6, triggered by the launch of PMS as a sellable product.
+
+**Deliverables:**
+- [x] `apps/products/` app — `Product` model (BaseModel) with identity, descriptions, features (JSON), CTAs, optional contact block, SEO, assets, status (`live`/`coming-soon`)
+- [x] Public views `/products/` + `/products/<slug>/` — live-only; coming-soon products 404 on detail
+- [x] "Products" nav item added as first entry after About, before Services
+- [x] "Our Products" strip on the home page, between hero and Services
+- [x] Unfold admin with rich fieldsets, status badge, contact-state indicator, bulk Live/Coming-Soon actions; sidebar entry under Website Content
+- [x] Sitemap entry (`ProductSitemap`) + `products:list` in static sitemap
+- [x] PMS seeded via data migration with content from team brief; assets in `static/images/products/pms/`
+- [ ] BMS seeded via follow-up branch (`feature/products-module-bms`) once assets land
+- [ ] PMS contact block populated via admin once BJP provides values
+
+**Definition of Done for Phase 6.5:**
+Both PMS and BMS pages live on the main domain, listed on the home page strip, reachable from the Products nav tab. Admin can add a third product without code changes.
+
+---
+
 ### Phase Rules for Claude Code
 1. **Always know the current phase** — check this section at the start of every session
 2. **Do not work ahead** — if Phase 1 is active, do not write frontend templates
@@ -871,7 +891,7 @@ Pushing to `main` on GitHub automatically deploys to `technologies.bejundas.co.t
 
 ---
 
-*Last updated: May 2026*
+*Last updated: June 2026*
 *Project: BJP Technologies (T) Limited — bjptechnologies.co.tz (primary)*
 *Stack: Django 6 + MySQL + cPanel + GitHub Actions*
-*Current Phase: Phase 6 — Polish & Launch*
+*Current Phase: Phase 6 — Polish & Launch (Phase 6.5 — Products Module in flight)*
