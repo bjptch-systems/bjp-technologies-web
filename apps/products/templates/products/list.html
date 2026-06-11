@@ -1,0 +1,115 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Our Products — BJP Technologies (T) Limited{% endblock %}
+{% block meta_description %}Productized software from BJP Technologies — production-ready platforms built for the Tanzanian market. Property management, business management and more.{% endblock %}
+{% block og_title %}Our Products — BJP Technologies (T) Limited{% endblock %}
+{% block og_description %}Productized software from BJP Technologies — production-ready platforms built for the Tanzanian market.{% endblock %}
+{% block og_url %}/products/{% endblock %}
+
+{% block content %}
+
+<!-- Products Banner -->
+<div class="rts-service-banner-area ptb--80 position-relative" style="background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);">
+    <div class="container">
+        <div class="row d-flex align-items-center">
+            <div class="col-lg-8 mb_md--30 mb_sm--30">
+                <div class="service-banner-content-wrapper">
+                    <div class="bread-plug wow fadeInUp" data-wow-offset="120" data-wow-delay=".2s">
+                        <a href="{% url 'main:home' %}" style="color:var(--accent); text-decoration:none;">Home</a>
+                        <i class="fa-regular fa-chevron-right" style="color:var(--grey); margin:0 8px; font-size:11px;"></i>
+                        <span style="color:var(--white);">Products</span>
+                    </div>
+                    <h1 class="title wow fadeInUp" data-wow-offset="120" data-wow-delay=".4s"
+                        style="font-family:'DM Serif Display', serif; color:var(--white); font-size:clamp(2rem,5vw,3rem); margin:16px 0;">
+                        Software products built locally, for Tanzania.
+                    </h1>
+                    <p class="disc wow fadeInUp" data-wow-offset="120" data-wow-delay=".6s"
+                       style="color:var(--grey-light); max-width:620px;">
+                        Production-ready platforms we have built and operate ourselves — not just services we
+                        sell. Each product is designed around the realities of doing business in East Africa.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Products Grid -->
+<div class="rts-section-gap">
+    <div class="container">
+        <div class="row g-5">
+            {% for product in products %}
+            <div class="col-lg-6 wow fadeInUp" data-wow-offset="120" data-wow-delay=".{{ forloop.counter }}s">
+                <a href="{% url 'products:detail' slug=product.slug %}"
+                   style="display:block; background:var(--white); border:1px solid var(--grey-light); border-radius:16px; overflow:hidden; text-decoration:none; transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;"
+                   onmouseover="this.style.transform='translateY(-6px)'; this.style.boxShadow='0 20px 50px rgba(13,27,75,0.12)'; this.style.borderColor='var(--accent)';"
+                   onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'; this.style.borderColor='var(--grey-light)';">
+                    {% if product.hero_image %}
+                    <div style="background:linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%); padding:24px;">
+                        <img src="{% static 'images/' %}{{ product.hero_image }}"
+                             alt="{{ product.name }} screenshot"
+                             style="width:100%; height:auto; border-radius:8px; display:block;">
+                    </div>
+                    {% endif %}
+                    <div style="padding:32px;">
+                        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px;">
+                            {% if product.logo_image %}
+                            <img src="{% static 'images/' %}{{ product.logo_image }}"
+                                 alt="{{ product.name }} logo"
+                                 style="height:28px; width:auto;">
+                            {% endif %}
+                            <span style="font-family:'Space Mono', monospace; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--blue);">
+                                {{ product.get_status_display }}
+                            </span>
+                        </div>
+                        <h3 style="font-family:'DM Serif Display', serif; color:var(--navy); margin:8px 0 6px;">
+                            {{ product.name }}
+                        </h3>
+                        <p style="color:var(--blue); font-weight:600; margin-bottom:14px;">
+                            {{ product.tagline }}
+                        </p>
+                        <p style="color:var(--text-body); margin-bottom:20px;">
+                            {{ product.short_description }}
+                        </p>
+                        <span style="display:inline-flex; align-items:center; gap:8px; color:var(--navy); font-weight:600;">
+                            Explore {{ product.name }}
+                            <i class="fa-regular fa-arrow-right"></i>
+                        </span>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-lg-12 text-center">
+                <p style="color:var(--grey); padding:60px 0;">No products listed yet.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- CTA Banner -->
+<div class="rts-call-to-action-area-bg-dark rts-section-gapBottom"
+     style="background:linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%); padding:80px 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mb_md--30 mb_sm--30">
+                <h2 class="wow fadeInUp" data-wow-offset="120" data-wow-delay=".2s"
+                    style="font-family:'DM Serif Display', serif; color:var(--white); font-size:clamp(1.6rem,3vw,2.4rem); margin:0 0 12px;">
+                    Need something custom?
+                </h2>
+                <p class="wow fadeInUp" data-wow-offset="120" data-wow-delay=".4s"
+                   style="color:var(--grey-light); margin:0;">
+                    If our products don't fit your case, our team builds tailored software end-to-end.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{% url 'services:list' %}" class="rts-btn btn-primary wow fadeInUp" data-wow-delay=".5s">
+                    See Our Services
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
