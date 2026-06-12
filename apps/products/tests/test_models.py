@@ -124,3 +124,88 @@ class TestPMSSeed:
             icon = feat.get("icon", "")
             assert icon.startswith("fa-"), f"Expected fa-* icon, got: {icon!r}"
             assert "bi-" not in icon, f"Leftover Bootstrap Icons class: {icon!r}"
+
+
+@pytest.mark.django_db
+class TestBMSSeed:
+    def test_bms_record_exists(self):
+        assert Product.objects.filter(slug="bms").exists()
+
+    def test_bms_is_live(self):
+        bms = Product.objects.get(slug="bms")
+        assert bms.is_live
+
+    def test_bms_has_10_features(self):
+        bms = Product.objects.get(slug="bms")
+        assert len(bms.features) == 10
+
+    def test_bms_icons_use_font_awesome_not_bootstrap_icons(self):
+        bms = Product.objects.get(slug="bms")
+        for feat in bms.features:
+            icon = feat.get("icon", "")
+            assert icon.startswith("fa-"), f"Expected fa-* icon, got: {icon!r}"
+            assert "bi-" not in icon, f"Leftover bi-* class: {icon!r}"
+
+    def test_bms_cta_routes_to_internal_contact_form(self):
+        """Per user direction the live BMS URL is hidden — the demo CTA must
+        route to /contact/ with a product hint, not to the live product."""
+        bms = Product.objects.get(slug="bms")
+        assert bms.cta_primary_url == "/contact/?product=bms"
+        assert "bjptechnologies.co.tz" not in bms.cta_primary_url
+        assert bms.cta_secondary_url == ""
+
+    def test_bms_uses_company_support_email(self):
+        bms = Product.objects.get(slug="bms")
+        assert bms.contact_email == "info@bjptechnologies.co.tz"
+
+    def test_bms_has_no_disclosures(self):
+        bms = Product.objects.get(slug="bms")
+        assert bms.get_disclosures_list() == []
+
+
+@pytest.mark.django_db
+class TestVikundiSeed:
+    def test_vikundi_record_exists(self):
+        assert Product.objects.filter(slug="vikundi").exists()
+
+    def test_vikundi_is_live(self):
+        v = Product.objects.get(slug="vikundi")
+        assert v.is_live
+
+    def test_vikundi_has_12_features(self):
+        v = Product.objects.get(slug="vikundi")
+        assert len(v.features) == 12
+
+    def test_vikundi_keeps_honest_tone_disclosures(self):
+        """Vikundi brief explicitly flags two limitations — they must be
+        carried into the public page so we don't oversell."""
+        v = Product.objects.get(slug="vikundi")
+        notes = v.get_disclosures_list()
+        assert len(notes) == 2
+        all_text = " ".join(notes).lower()
+        assert "single group" in all_text
+        assert "share-out" in all_text or "automated" in all_text
+
+    def test_vikundi_cta_routes_to_internal_contact_form(self):
+        v = Product.objects.get(slug="vikundi")
+        assert v.cta_primary_url == "/contact/?product=vikundi"
+        assert "bjptechnologies.co.tz" not in v.cta_primary_url
+        assert v.cta_secondary_url == ""
+
+    def test_vikundi_uses_company_support_email(self):
+        v = Product.objects.get(slug="vikundi")
+        assert v.contact_email == "info@bjptechnologies.co.tz"
+
+
+@pytest.mark.django_db
+class TestProductsOrdering:
+    """The home-page strip and list page order products by `order`. Confirm
+    PMS=1, BMS=2, Vikundi=3 to lock the intended layout."""
+
+    def test_live_products_are_ordered(self):
+        slugs = list(
+            Product.objects.filter(status=Product.STATUS_LIVE)
+            .order_by("order")
+            .values_list("slug", flat=True)
+        )
+        assert slugs == ["pms", "bms", "vikundi"]

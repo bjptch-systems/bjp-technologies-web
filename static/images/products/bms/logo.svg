@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 88" width="360" height="88" role="img" aria-label="BMS — Business Management System">
+  <defs>
+    <linearGradient id="bmsBadge" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3d8bfd"/>
+      <stop offset="1" stop-color="#0b5ed7"/>
+    </linearGradient>
+  </defs>
+  <!-- Badge -->
+  <rect x="4" y="12" width="64" height="64" rx="15" fill="url(#bmsBadge)"/>
+  <!-- Growth bars motif -->
+  <rect x="20" y="46" width="9" height="16" rx="2.5" fill="#ffffff" opacity="0.95"/>
+  <rect x="31.5" y="38" width="9" height="24" rx="2.5" fill="#ffffff" opacity="0.95"/>
+  <rect x="43" y="28" width="9" height="34" rx="2.5" fill="#ffffff"/>
+  <!-- Wordmark -->
+  <text x="84" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#1a1d21" letter-spacing="1">BMS</text>
+  <text x="85" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#5b6670" letter-spacing="0.3">Business Management System</text>
+</svg>
