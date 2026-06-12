@@ -3,6 +3,25 @@
    No overrides of Luminos layout, colors, fonts, or footer styling.
 */
 
+/* ── BJP Brand Variables (CLAUDE.md §4)
+   Per-page templates reference these via var(--navy) etc.
+   Luminos's own :root in style.css defines --color-* tokens; these are
+   layered on top, not replacing them.
+*/
+:root {
+  --navy: #0D1B4B;
+  --navy-dark: #080F2E;
+  --navy-mid: #132260;
+  --blue: #1565C0;
+  --blue-light: #1E88E5;
+  --accent: #00C6FF;
+  --white: #FFFFFF;
+  --off-white: #F4F6FC;
+  --grey-light: #E8ECF4;
+  --grey: #8A94B0;
+  --text-body: #3A4468;
+}
+
 /* ── Logo sizing ── */
 .header-area-four .logo img {
   height: 40px;
