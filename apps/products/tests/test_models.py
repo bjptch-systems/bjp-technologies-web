@@ -135,9 +135,16 @@ class TestBMSSeed:
         bms = Product.objects.get(slug="bms")
         assert bms.is_live
 
-    def test_bms_has_10_features(self):
+    def test_bms_has_9_features(self):
+        """After migration 0006 the Loans / Microfinance entry is dropped —
+        BMS doesn't actually ship it. Vikundi keeps its own loans module."""
         bms = Product.objects.get(slug="bms")
-        assert len(bms.features) == 10
+        assert len(bms.features) == 9
+
+    def test_bms_does_not_advertise_loans_feature(self):
+        bms = Product.objects.get(slug="bms")
+        names = [f.get("name", "") for f in bms.features]
+        assert "Loans / Microfinance" not in names
 
     def test_bms_icons_use_font_awesome_not_bootstrap_icons(self):
         bms = Product.objects.get(slug="bms")
