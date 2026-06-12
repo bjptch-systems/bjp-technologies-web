@@ -77,6 +77,15 @@ class Product(BaseModel):
         default="",
         help_text="Single line — e.g. 'Get started in 24 hours.'",
     )
+    disclosures = models.TextField(
+        blank=True,
+        default="",
+        help_text=(
+            "Optional honest-tone notes about what's NOT yet shipped — one per line. "
+            "Rendered as a small 'Currently shipping' callout on the detail page. "
+            "Leave blank to hide the callout."
+        ),
+    )
 
     # CTAs
     cta_primary_label = models.CharField(max_length=60, blank=True, default="Request a demo")
@@ -182,3 +191,6 @@ class Product(BaseModel):
 
     def get_how_it_works_list(self) -> list[str]:
         return [line.strip() for line in self.how_it_works_steps.splitlines() if line.strip()]
+
+    def get_disclosures_list(self) -> list[str]:
+        return [line.strip() for line in self.disclosures.splitlines() if line.strip()]

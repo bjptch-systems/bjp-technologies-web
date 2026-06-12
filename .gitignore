@@ -59,6 +59,8 @@ htmlcov/
 luminos/
 pms details/
 bms details/
+bms assets/
+vkd assets/
 
 # Test output files
 *.txt

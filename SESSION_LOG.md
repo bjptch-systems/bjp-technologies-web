@@ -1226,3 +1226,69 @@ TEMPLATE FOR NEXT SESSION — copy this block and fill in:
 - [ ] Open `feature/products-module-bms` for the second product
 
 ---
+
+## Session 17 — 2026-06-12 EAT
+
+**Goal:** Ship BMS and Vikundi as the second and third live products under the Phase 6.5 Products Module.
+**Branch:** `feature/products-module-bms-vkd` (off `develop`)
+**Status:** ✅ Complete
+
+### What Was Done
+- Added an optional **`disclosures`** TextField on `Product` (one note per line) + `get_disclosures_list()` helper. Renders as a small "Currently shipping" callout below the How It Works section, only when notes exist. PMS and BMS render unchanged. Added the field to the admin's Detail-page-sections fieldset with explanatory help text.
+- Seeded **BMS** (slug=`bms`, order=2) and **Vikundi** (slug=`vikundi`, order=3) via `0005_seed_bms_vikundi`. Both records carry the team brief content (long descriptions, problem statements, target users, 10 / 12 features, differentiators, how-it-works, screenshots).
+- Per user direction, **live product URLs are NOT exposed** on the public site. Primary CTA on both products routes to `/contact/?product=<slug>` instead of the external `demo.bjptechnologies.co.tz` / `vikundi.bjptechnologies.co.tz`. The detail template now conditionally drops `target="_blank"` for internal CTAs while keeping it for external URLs (PMS still opens its live site externally).
+- Per user direction, **secondary CTA dropped** — single clear "Request a demo" button on BMS and Vikundi.
+- BMS feature icons authored as Bootstrap Icons in the brief were remapped to Font Awesome Pro at seed time (CSP blocks the BI CDN; same approach migration 0003 used for PMS).
+- Vikundi seeded with 2 honest-tone `disclosures`: "single group per installation" and "share-out is a proportional summary, not automated".
+- Contact email for both is `info@bjptechnologies.co.tz`.
+- Contact view extended to read `?product=` and (a) prefill the message field with `"I'd like to request a demo of <Name>."` and (b) render a small navy/cyan banner above the form so the visitor sees the routing wasn't a dead end. Unknown / missing `?product=` values render the standard form unchanged.
+- Assets (8 each: hero, 5 feature screenshots, OG card, logo SVG) copied into `static/images/products/{bms,vikundi}/`. `bms assets/` and `vkd assets/` added to `.gitignore`.
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| `apps/products/models.py` | Modified | Added `disclosures` field + helper |
+| `apps/products/admin.py` | Modified | Added `disclosures` to Detail-page-sections fieldset |
+| `apps/products/migrations/0004_product_disclosures.py` | Created | Schema |
+| `apps/products/migrations/0005_seed_bms_vikundi.py` | Created | Idempotent seed |
+| `apps/products/templates/products/detail.html` | Modified | Disclosures callout block + conditional external-link target |
+| `apps/products/tests/test_models.py` | Modified | Added `TestBMSSeed` (7), `TestVikundiSeed` (6), `TestProductsOrdering` (1) |
+| `apps/contact/views.py` | Modified | `get_initial` + `get_context_data` read `?product=` |
+| `apps/contact/templates/contact/contact.html` | Modified | Conditional banner above form |
+| `apps/contact/tests/test_product_prefill.py` | Created | 4 prefill behaviour tests |
+| `.gitignore` | Modified | Excluded `bms assets/` + `vkd assets/` |
+| `static/images/products/bms/*.{png,svg}` | Added | 8 assets |
+| `static/images/products/vikundi/*.{png,svg}` | Added | 8 assets |
+
+### Migrations
+- `products/0004_product_disclosures` — applied locally ✅
+- `products/0005_seed_bms_vikundi` — applied locally ✅
+- **Server note:** CI/CD `migrate` on deploy adds the column + seeds both records
+
+### Tests
+- 149 / 149 passing (was 134; +15 new tests)
+- ruff clean; black clean
+- Manual smoke: `/products/` lists all 3, `/products/bms/` returns 200 with internal CTA, `/products/vikundi/` returns 200 with disclosures callout, `/contact/?product=bms` shows the banner and prefilled message, home page strip shows all 3 cards in order
+
+### Decisions Made
+- **Decision:** Route demo CTAs to `/contact/?product=<slug>` instead of the live product domains.
+  **Reason:** Per user direction — live URLs (demo.*, vikundi.*) are kept private; all demo requests should land in the BJP contact form.
+- **Decision:** Detail template conditionally drops `target="_blank"` based on whether the CTA URL starts with `http`.
+  **Reason:** Internal CTAs shouldn't open in new tabs (UX expectation); external CTAs (PMS today, future products tomorrow) still should. Cleaner than per-product template branches.
+- **Decision:** Add `disclosures` as a new optional model field rather than appending honest-tone notes to `long_description`.
+  **Reason:** Visually distinct from marketing prose, opt-in per product (PMS/BMS show no callout), and admin can add/edit/remove notes without rewriting the hero.
+- **Decision:** Map `?product=` to the message field, not a hidden meta field on `ContactEnquiry`.
+  **Reason:** Notification email to `info@bjptechnologies.co.tz` already includes the message body, so the demo intent is visible immediately without schema changes. Future iteration could add a `product` FK if attribution analytics matter.
+- **Decision:** Drop secondary CTA entirely on BMS and Vikundi.
+  **Reason:** Per user direction — a single primary action beats two competing ones when both would route to the same place.
+
+### Blockers / Issues
+- None functionally. Awaiting nothing — both products ready to ship.
+
+### Next Session Should
+- [ ] Merge PR → `develop` → `main` → deploy
+- [ ] After deploy: confirm `/products/`, `/products/bms/`, `/products/vikundi/`, and the contact prefill banner all render correctly
+- [ ] Open a separate hotfix branch for the GA4 CSP issue (still pending from Session 16)
+- [ ] Populate contact-block (phone / hours / WhatsApp) on PMS / BMS / Vikundi via admin when BJP provides values
+
+---
