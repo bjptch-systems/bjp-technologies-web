@@ -111,3 +111,16 @@ class TestPMSSeed:
         pms = Product.objects.get(slug="pms")
         assert pms.cta_primary_url == "https://pms.bjptechnologies.co.tz"
         assert pms.cta_secondary_url == "https://pms.bjptechnologies.co.tz"
+
+    def test_pms_icons_use_font_awesome_not_bootstrap_icons(self):
+        """After migration 0003, every PMS feature icon must use Font Awesome.
+
+        Bootstrap Icons (`bi-*`) were loaded from a CDN that's blocked by the
+        site CSP, so glyphs never rendered. Font Awesome Pro is already loaded
+        site-wide via static/css/plugins/fontawesome.css.
+        """
+        pms = Product.objects.get(slug="pms")
+        for feat in pms.features:
+            icon = feat.get("icon", "")
+            assert icon.startswith("fa-"), f"Expected fa-* icon, got: {icon!r}"
+            assert "bi-" not in icon, f"Leftover Bootstrap Icons class: {icon!r}"

@@ -8,7 +8,6 @@
 {% block og_url %}/products/{{ product.slug }}/{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <style>
     .product-hero {
         background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 50%, var(--navy-mid) 100%);
@@ -254,7 +253,7 @@
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-offset="120">
                 <div class="product-feature-card">
                     <div class="product-feature-icon">
-                        <i class="bi {{ feature.icon }}"></i>
+                        <i class="{{ feature.icon }}"></i>
                     </div>
                     <h4 style="color:var(--navy); font-size:1.15rem; margin:0 0 10px;">
                         {{ feature.name }}
