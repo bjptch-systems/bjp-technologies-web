@@ -181,7 +181,7 @@
                 {% for paragraph in product.long_description.splitlines %}
                     {% if paragraph %}
                     <p class="wow fadeInUp" data-wow-offset="120" data-wow-delay=".{{ forloop.counter }}s"
-                       style="color:var(--text-body); font-size:1.08rem; line-height:1.85; margin-bottom:22px;">
+                       style="color:var(--text-body); font-size:1.15rem; line-height:1.85; margin-bottom:24px;">
                         {{ paragraph }}
                     </p>
                     {% endif %}
@@ -207,9 +207,9 @@
                 </div>
                 <ul style="list-style:none; padding:0; margin-top:24px;">
                     {% for item in product.get_problem_list %}
-                    <li style="display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px dashed var(--grey-light);">
-                        <i class="fa-regular fa-circle-xmark" style="color:#dc2626; font-size:20px; margin-top:2px; flex-shrink:0;"></i>
-                        <span style="color:var(--text-body);">{{ item }}</span>
+                    <li style="display:flex; gap:14px; align-items:flex-start; padding:16px 0; border-bottom:1px dashed var(--grey-light);">
+                        <i class="fa-regular fa-circle-xmark" style="color:#dc2626; font-size:22px; margin-top:3px; flex-shrink:0;"></i>
+                        <span style="color:var(--text-body); font-size:1.05rem; line-height:1.6;">{{ item }}</span>
                     </li>
                     {% endfor %}
                 </ul>
@@ -226,9 +226,9 @@
                 </div>
                 <ul style="list-style:none; padding:0; margin-top:24px;">
                     {% for item in product.get_differentiators_list %}
-                    <li style="display:flex; gap:14px; align-items:flex-start; padding:14px 0; border-bottom:1px dashed var(--grey-light);">
-                        <i class="fa-sharp fa-regular fa-check" style="color:#16a34a; font-size:20px; margin-top:2px; flex-shrink:0;"></i>
-                        <span style="color:var(--text-body);">{{ item }}</span>
+                    <li style="display:flex; gap:14px; align-items:flex-start; padding:16px 0; border-bottom:1px dashed var(--grey-light);">
+                        <i class="fa-sharp fa-regular fa-check" style="color:#16a34a; font-size:22px; margin-top:3px; flex-shrink:0;"></i>
+                        <span style="color:var(--text-body); font-size:1.05rem; line-height:1.6;">{{ item }}</span>
                     </li>
                     {% endfor %}
                 </ul>
@@ -261,10 +261,10 @@
                     <div class="product-feature-icon">
                         <i class="{{ feature.icon }}"></i>
                     </div>
-                    <h4 style="color:var(--navy); font-size:1.15rem; margin:0 0 10px;">
+                    <h4 style="color:var(--navy); font-size:1.25rem; margin:0 0 12px;">
                         {{ feature.name }}
                     </h4>
-                    <p style="color:var(--text-body); font-size:0.95rem; margin:0;">
+                    <p style="color:var(--text-body); font-size:1rem; line-height:1.6; margin:0;">
                         {{ feature.description }}
                     </p>
                 </div>
@@ -293,9 +293,9 @@
         <div class="row g-4 mt--30">
             {% for user_line in product.get_target_users_list %}
             <div class="col-lg-6 wow fadeInUp" data-wow-offset="120">
-                <div style="background:#fff; border:1px solid var(--grey-light); border-radius:12px; padding:24px; height:100%;">
-                    <i class="fa-regular fa-user" style="color:var(--blue); font-size:20px; margin-bottom:10px; display:block;"></i>
-                    <p style="color:var(--text-body); margin:0;">{{ user_line }}</p>
+                <div style="background:#fff; border:1px solid var(--grey-light); border-radius:12px; padding:28px; height:100%;">
+                    <i class="fa-regular fa-user" style="color:var(--blue); font-size:22px; margin-bottom:12px; display:block;"></i>
+                    <p style="color:var(--text-body); font-size:1.05rem; line-height:1.6; margin:0;">{{ user_line }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -340,7 +340,7 @@
                     </p>
                     <ul style="list-style:none; padding:0; margin:0;">
                         {% for note in product.get_disclosures_list %}
-                        <li style="color:var(--text-body); padding:6px 0; font-size:0.95rem;">— {{ note }}</li>
+                        <li style="color:var(--text-body); padding:8px 0; font-size:1.05rem; line-height:1.6;">— {{ note }}</li>
                         {% endfor %}
                     </ul>
                 </div>
