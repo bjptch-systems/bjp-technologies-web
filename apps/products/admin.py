@@ -60,11 +60,13 @@ class ProductAdmin(ModelAdmin):
                     "how_it_works_steps",
                     "pricing_summary",
                     "onboarding_promise",
+                    "disclosures",
                 ),
                 "description": (
-                    "problem_statements / target_users / differentiators / how_it_works_steps — "
-                    "one item per line. features — JSON list of "
-                    '{"name", "description", "icon"} dicts.'
+                    "problem_statements / target_users / differentiators / how_it_works_steps "
+                    "/ disclosures — one item per line. features — JSON list of "
+                    '{"name", "description", "icon"} dicts. disclosures renders as a small '
+                    "'Currently shipping' callout — leave blank to hide it."
                 ),
             },
         ),

@@ -10,11 +10,39 @@ from django.views.generic.edit import FormView
 from .forms import ContactForm
 from .models import ContactEnquiry
 
+PRODUCT_HINT_TO_DEMO_LINE = {
+    "pms": "I'd like to request a demo of PMS (Property Management System).",
+    "bms": "I'd like to request a demo of BMS (Business Management System).",
+    "vikundi": "I'd like to request a demo of Vikundi (VICOBA Management System).",
+}
+
 
 class ContactView(FormView):
     template_name = "contact/contact.html"
     form_class = ContactForm
     success_url = reverse_lazy("contact:success")
+
+    def get_initial(self):
+        initial = super().get_initial()
+        product = (self.request.GET.get("product") or "").lower().strip()
+        line = PRODUCT_HINT_TO_DEMO_LINE.get(product)
+        if line:
+            initial["message"] = line
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        product = (self.request.GET.get("product") or "").lower().strip()
+        if product in PRODUCT_HINT_TO_DEMO_LINE:
+            try:
+                from apps.products.models import Product
+
+                context["product_hint"] = Product.objects.filter(
+                    slug=product, status=Product.STATUS_LIVE
+                ).first()
+            except Exception:
+                context["product_hint"] = None
+        return context
 
     def _get_client_ip(self) -> str:
         x_forwarded_for = self.request.META.get("HTTP_X_FORWARDED_FOR")

@@ -96,6 +96,19 @@
             </div>
             <div class="col-lg-12">
 
+                {% if product_hint %}
+                <div role="status"
+                     style="background:linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); color:#fff; border-radius:12px; padding:18px 22px; margin-bottom:24px; display:flex; align-items:center; gap:14px;">
+                    <i class="fa-regular fa-clipboard-check" style="color:var(--accent); font-size:22px; flex-shrink:0;"></i>
+                    <div>
+                        <p style="margin:0; font-weight:600;">Requesting a demo of {{ product_hint.name }}</p>
+                        <p style="margin:0; color:rgba(255,255,255,0.85); font-size:14px;">
+                            We've prefilled the message — feel free to edit it before sending.
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+
                 {% if form.non_field_errors %}
                 <div class="alert" role="alert"
                      style="background:#fff3cd; border:1px solid #ffc107; border-radius:8px; padding:16px 20px; margin-bottom:24px; color:#7a4c00;">

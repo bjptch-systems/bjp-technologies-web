@@ -130,17 +130,23 @@
 
                 <div class="d-flex gap-3 flex-wrap wow fadeInUp" data-wow-offset="120" data-wow-delay=".6s">
                     {% if product.cta_primary_url %}
-                    <a href="{{ product.cta_primary_url }}" target="_blank" rel="noopener"
+                    {% with primary_external=product.cta_primary_url|slice:":4"|lower %}
+                    <a href="{{ product.cta_primary_url }}"
+                       {% if primary_external == 'http' %}target="_blank" rel="noopener"{% endif %}
                        class="rts-btn btn-primary btn-bold">
                         {{ product.cta_primary_label }}
-                        <i class="fa-regular fa-arrow-up-right-from-square" style="margin-left:8px; font-size:13px;"></i>
+                        {% if primary_external == 'http' %}<i class="fa-regular fa-arrow-up-right-from-square" style="margin-left:8px; font-size:13px;"></i>{% endif %}
                     </a>
+                    {% endwith %}
                     {% endif %}
                     {% if product.cta_secondary_url %}
-                    <a href="{{ product.cta_secondary_url }}" target="_blank" rel="noopener"
+                    {% with secondary_external=product.cta_secondary_url|slice:":4"|lower %}
+                    <a href="{{ product.cta_secondary_url }}"
+                       {% if secondary_external == 'http' %}target="_blank" rel="noopener"{% endif %}
                        class="rts-btn btn-border btn-bold" style="border-color:rgba(255,255,255,0.4); color:#fff;">
                         {{ product.cta_secondary_label }}
                     </a>
+                    {% endwith %}
                     {% endif %}
                 </div>
 
@@ -323,6 +329,24 @@
             </div>
             {% endfor %}
         </div>
+
+        {% if product.get_disclosures_list %}
+        <div class="row mt--50 justify-content-center">
+            <div class="col-lg-9 wow fadeInUp" data-wow-offset="120">
+                <div style="border:1px dashed var(--grey); border-radius:12px; padding:24px 28px; background:#fff;">
+                    <p style="font-family:'Space Mono', monospace; font-size:11px; letter-spacing:1.4px; text-transform:uppercase; color:var(--blue); margin:0 0 12px;">
+                        <i class="fa-regular fa-circle-info" style="margin-right:6px;"></i>
+                        Currently shipping
+                    </p>
+                    <ul style="list-style:none; padding:0; margin:0;">
+                        {% for note in product.get_disclosures_list %}
+                        <li style="color:var(--text-body); padding:6px 0; font-size:0.95rem;">— {{ note }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endif %}
@@ -441,10 +465,13 @@
             </div>
             <div class="col-lg-4 text-lg-end">
                 {% if product.cta_primary_url %}
-                <a href="{{ product.cta_primary_url }}" target="_blank" rel="noopener"
+                {% with bottom_external=product.cta_primary_url|slice:":4"|lower %}
+                <a href="{{ product.cta_primary_url }}"
+                   {% if bottom_external == 'http' %}target="_blank" rel="noopener"{% endif %}
                    class="rts-btn btn-primary wow fadeInUp" data-wow-delay=".5s">
                     {{ product.cta_primary_label }}
                 </a>
+                {% endwith %}
                 {% endif %}
             </div>
         </div>
