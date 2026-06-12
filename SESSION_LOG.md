@@ -1177,3 +1177,52 @@ TEMPLATE FOR NEXT SESSION — copy this block and fill in:
 - [ ] Start `feature/products-module-bms` — much smaller scope: just a new data-migration seeding the BMS record + assets
 
 ---
+
+## Session 16 — 2026-06-12 EAT
+
+**Goal:** Hotfix three rendering bugs that surfaced on the live PMS module — admin 500, hero/navbar styling, and CSP-blocked feature icons.
+**Branch:** `fix/products-rendering` (off `develop`)
+**Status:** ✅ Complete
+
+### Bugs fixed
+1. **Admin `/admin/products/product/` returned 500.**
+   Root cause: `ProductAdmin.show_contact_state` called `format_html('<span ...>✓ filled</span>')` with zero placeholder args. Django 6 hardened `format_html` to raise `TypeError: args or kwargs must be provided.` to stop people sneaking unescaped HTML through. Reproduced locally end-to-end. Fix: switched to `mark_safe` — there's no user input to escape. Added `test_admin.py` with an admin-client changelist test that catches the regression.
+2. **Hero / banner styling broken on `/products/`, `/products/pms/` (and `/services/`, `/industries/` as a pre-existing side effect).**
+   Root cause: CLAUDE.md §4 documents the BJP brand variables (`--navy`, `--accent`, etc.) but they were never actually defined in any loaded stylesheet. Inline `background: linear-gradient(135deg, var(--navy-dark), var(--navy))` fell back to transparent → white banner → white navbar text invisible against it. Fix: added the full 11-variable `:root` block to `bjp.css` — single point of definition, no template churn, also fixes the pre-existing services/industries banner issue.
+3. **PMS feature icons "tiny to read" on production.**
+   Root cause: Bootstrap Icons CSS loaded from `cdn.jsdelivr.net` was blocked by the site CSP (`style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`). Glyphs never rendered. Fix: dropped the Bootstrap Icons CDN `<link>` entirely; remapped the 8 PMS feature icons to Font Awesome Pro (which is already loaded site-wide). Migration `0003_remap_pms_icons` updates the existing production record idempotently; reverse migration swaps back. Migration `0002` left untouched per CLAUDE.md §6.
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| `apps/products/admin.py` | Modified | `mark_safe` for `show_contact_state`; new `from django.utils.safestring import mark_safe` |
+| `apps/products/tests/test_admin.py` | Created | Regression test for changelist + change form render |
+| `apps/products/tests/test_models.py` | Modified | New test asserting PMS icons are all `fa-*`, no `bi-*` leftovers |
+| `apps/products/migrations/0003_remap_pms_icons.py` | Created | Idempotent JSON update, reversible |
+| `apps/products/templates/products/detail.html` | Modified | Removed Bootstrap Icons CDN `<link>`; render icons as full FA class |
+| `static/css/bjp.css` | Modified | Added `:root` with the 11 BJP brand variables |
+
+### Tests
+- 131 / 131 passing (was 128; +3 new regression tests)
+- ruff clean; black clean
+- Manual smoke: admin changelist 200 (was 500), bjp.css served with `:root` defs, detail page no longer references the CDN, all 8 feature icons render as `fa-regular fa-*`
+
+### Decisions Made
+- **Decision:** Drop Bootstrap Icons rather than whitelist `cdn.jsdelivr.net` in CSP.
+  **Reason:** Font Awesome Pro is already loaded for the entire site and is the convention everywhere else (navbar, footer, services). Adding a second icon library would mean two icon families to maintain. Tightening CSP > loosening it.
+- **Decision:** Migration `0003` updates the existing record instead of editing `0002`.
+  **Reason:** CLAUDE.md §6 — never edit a migration that has been applied to production. Fresh installs run `0002` (creates with bi-*) then `0003` (remaps to fa-*); end state is identical.
+- **Decision:** Add brand variables to `bjp.css` not a separate `variables.css`.
+  **Reason:** `bjp.css` is already loaded after `style.css` in `base.html`; one less file, one less HTTP request. CLAUDE.md mentions a `variables.css` aspirationally but it doesn't exist on the server (404). Defining `:root` in `bjp.css` honours the intent.
+
+### Out of scope (flagged for later)
+- **GA4 tag (`googletagmanager.com/gtag/js`) blocked by CSP** — Phase 2 analytics won't fire. Different domain → different CSP fix (`script-src` + `connect-src`). Separate ticket.
+- **`/media/branding/bjp-logo-horizontal-light.png` 404** — `SiteSettings.logo` field has a value but the file isn't on production media. Pre-existing, not products-related.
+
+### Next Session Should
+- [ ] Merge PR → develop → main → deploy
+- [ ] After deploy: confirm `/admin/products/product/` loads, hero gradients render navy, PMS feature icons show as FA glyphs
+- [ ] Open a separate hotfix branch for the GA4 CSP issue (whitelist `https://www.googletagmanager.com` + `https://www.google-analytics.com`)
+- [ ] Open `feature/products-module-bms` for the second product
+
+---

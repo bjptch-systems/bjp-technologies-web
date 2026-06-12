@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from unfold.admin import ModelAdmin
 
 from .models import Product
@@ -146,9 +147,11 @@ class ProductAdmin(ModelAdmin):
 
     @admin.display(description="Contact")
     def show_contact_state(self, obj):
+        # mark_safe — no user input to escape; format_html with zero args
+        # raises TypeError on Django 6.
         if obj.has_contact_block:
-            return format_html('<span style="color:#16a34a;">✓ filled</span>')
-        return format_html('<span style="color:#9ca3af;">— empty</span>')
+            return mark_safe('<span style="color:#16a34a;">✓ filled</span>')
+        return mark_safe('<span style="color:#9ca3af;">— empty</span>')
 
     @admin.display(description="Site")
     def show_link(self, obj):
