@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>BJP Technologies — Phase 6.5 Products Module Report</title>
+<style>
+  /* ── Print-friendly base — keeps colours when "Save as PDF" ── */
+  @page {
+    size: A4;
+    margin: 16mm 14mm;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    box-sizing: border-box;
+  }
+
+  /* ── BJP brand variables (CLAUDE.md §4) ── */
+  :root {
+    --navy: #0D1B4B;
+    --navy-dark: #080F2E;
+    --navy-mid: #132260;
+    --blue: #1565C0;
+    --blue-light: #1E88E5;
+    --accent: #00C6FF;
+    --white: #FFFFFF;
+    --off-white: #F4F6FC;
+    --grey-light: #E8ECF4;
+    --grey: #8A94B0;
+    --text-body: #3A4468;
+    --success: #16a34a;
+    --warn:    #f59e0b;
+    --danger:  #dc2626;
+  }
+
+  /* ── Fonts ── */
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: var(--text-body);
+    font-family: 'Outfit', system-ui, -apple-system, sans-serif;
+    font-size: 11.5pt;
+    line-height: 1.55;
+  }
+
+  /* ── Layout shell ── */
+  .page {
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 0 4mm;
+  }
+
+  /* ── Cover ── */
+  .cover {
+    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 55%, var(--navy-mid) 100%);
+    color: var(--white);
+    padding: 64px 56px;
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    page-break-after: always;
+  }
+  .cover::after {
+    content: "";
+    position: absolute;
+    right: -120px;
+    top: -80px;
+    width: 360px;
+    height: 360px;
+    background: radial-gradient(circle, rgba(0,198,255,0.22) 0%, transparent 70%);
+  }
+  .cover .label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10pt;
+    letter-spacing: 2.2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 18px;
+  }
+  .cover h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36pt;
+    line-height: 1.1;
+    margin: 0 0 18px;
+    font-weight: 400;
+  }
+  .cover .sub {
+    font-size: 14pt;
+    color: var(--grey-light);
+    max-width: 580px;
+    margin: 0 0 36px;
+  }
+  .cover .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 28px;
+    margin-top: 36px;
+    padding-top: 28px;
+    border-top: 1px solid rgba(255,255,255,0.18);
+  }
+  .cover .meta div {
+    min-width: 140px;
+  }
+  .cover .meta .k {
+    font-family: 'Space Mono', monospace;
+    font-size: 9pt;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .cover .meta .v {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ── Section wrappers ── */
+  section {
+    padding: 32px 0 18px;
+    page-break-inside: avoid;
+  }
+  h2 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--navy);
+    font-size: 22pt;
+    margin: 0 0 4px;
+    font-weight: 400;
+  }
+  h3 {
+    font-family: 'DM Serif Display', serif;
+    color: var(--navy);
+    font-size: 16pt;
+    margin: 28px 0 8px;
+    font-weight: 400;
+  }
+  .pre {
+    font-family: 'Space Mono', monospace;
+    font-size: 9pt;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 10px;
+  }
+  p {
+    margin: 0 0 12px;
+  }
+
+  /* ── Cards / boxes ── */
+  .card {
+    background: var(--off-white);
+    border: 1px solid var(--grey-light);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 14px 0;
+  }
+  .card.accent {
+    background: linear-gradient(135deg, #f4faff 0%, var(--off-white) 100%);
+    border-left: 4px solid var(--accent);
+  }
+  .card.navy {
+    background: var(--navy);
+    color: var(--white);
+    border-color: var(--navy);
+  }
+  .card.navy h3, .card.navy h4 {
+    color: var(--white);
+  }
+  .card.navy p { color: var(--grey-light); }
+
+  /* ── Stat strip on cover & summary ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin: 22px 0 14px;
+  }
+  .stat {
+    background: var(--white);
+    border: 1px solid var(--grey-light);
+    border-radius: 10px;
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .stat .n {
+    font-family: 'DM Serif Display', serif;
+    color: var(--navy);
+    font-size: 22pt;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat .l {
+    font-family: 'Space Mono', monospace;
+    font-size: 8.5pt;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+
+  /* ── Pill / tag ── */
+  .pill {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--navy-dark);
+    font-family: 'Space Mono', monospace;
+    font-size: 8.5pt;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+  }
+  .pill.warn  { background: var(--warn);    color: #fff; }
+  .pill.ok    { background: var(--success); color: #fff; }
+  .pill.muted { background: var(--grey-light); color: var(--text-body); }
+
+  /* ── Tables ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0 18px;
+    font-size: 10pt;
+  }
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--grey-light);
+    vertical-align: top;
+  }
+  th {
+    background: var(--off-white);
+    color: var(--navy);
+    font-weight: 600;
+    font-size: 9pt;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    border-bottom: 2px solid var(--grey-light);
+  }
+  tr:last-child td { border-bottom: none; }
+  td code, p code {
+    background: var(--off-white);
+    border: 1px solid var(--grey-light);
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9pt;
+    color: var(--navy);
+  }
+
+  /* ── Two-column ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    margin: 16px 0;
+  }
+
+  /* ── List polish ── */
+  ul { margin: 8px 0 14px 0; padding: 0 0 0 18px; }
+  ul li { margin-bottom: 6px; }
+
+  /* ── Decision rows ── */
+  .decision {
+    border-left: 3px solid var(--blue);
+    padding: 10px 16px;
+    background: var(--off-white);
+    margin: 10px 0;
+    border-radius: 0 8px 8px 0;
+  }
+  .decision .title {
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+  }
+  .decision .why {
+    color: var(--text-body);
+    font-size: 10.5pt;
+  }
+
+  /* ── PR row ── */
+  .pr {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--navy);
+    color: var(--white);
+    padding: 10px 16px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 10pt;
+  }
+  .pr .num {
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .pr .status {
+    background: var(--success);
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 9pt;
+  }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 40px;
+    padding: 24px;
+    background: var(--off-white);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 9.5pt;
+    color: var(--grey);
+  }
+  footer strong { color: var(--navy); }
+
+  /* ── Page break helpers ── */
+  .page-break { page-break-after: always; }
+  h2, h3 { break-after: avoid; }
+  table, .card, .stat { break-inside: avoid; }
+</style>
+</head>
+<body>
+
+<!-- ────────── COVER ────────── -->
+<div class="page">
+<div class="cover">
+  <div class="label">Project Report · Phase 6.5</div>
+  <h1>Products Module</h1>
+  <p class="sub">BJP Technologies (T) Limited — adding a first-class product showcase to bjptechnologies.co.tz with three live products (PMS, BMS, Vikundi), end-to-end admin, and brand-consistent detail pages.</p>
+  <div class="meta">
+    <div>
+      <div class="k">Repo</div>
+      <div class="v">bjp-technologies-web</div>
+    </div>
+    <div>
+      <div class="k">Phase</div>
+      <div class="v">6.5 — Products Module</div>
+    </div>
+    <div>
+      <div class="k">Status</div>
+      <div class="v">Shipped to production</div>
+    </div>
+    <div>
+      <div class="k">Period</div>
+      <div class="v">June 2026 · Sessions 15-18</div>
+    </div>
+    <div>
+      <div class="k">Pull Requests</div>
+      <div class="v">#68 · #70 · #72 · #74</div>
+    </div>
+    <div>
+      <div class="k">Tests</div>
+      <div class="v">150 / 150 passing</div>
+    </div>
+  </div>
+</div>
+
+<!-- ────────── EXECUTIVE SUMMARY ────────── -->
+<section>
+  <div class="pre">Executive Summary</div>
+  <h2>What was delivered</h2>
+  <p>Phase 6.5 took BJP Technologies' public site from a services-only company page to a productized brand showcasing three live software products built in-house. The work spanned four sessions: scaffolding the Products module with PMS as the first product, hotfixing three production rendering bugs that surfaced after launch, shipping BMS and Vikundi as products 2 and 3, then a final readability + accuracy fix that corrected a Luminos rem-base bug and removed a feature BMS doesn't actually ship.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="n">3</div><div class="l">Live products</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">Pull requests</div></div>
+    <div class="stat"><div class="n">150</div><div class="l">Tests passing</div></div>
+    <div class="stat"><div class="n">17</div><div class="l">Commits to develop</div></div>
+  </div>
+
+  <div class="card accent">
+    <p style="margin:0;"><strong>Bottom line.</strong> A visitor landing on <code>bjptechnologies.co.tz</code> now sees BJP not as "an IT services firm that builds for you" but as "a software company that ships products you can use today." The Products tab is the first item after About; the home page strip features all three products above the services grid; and the admin can add Product #4 with zero code changes.</p>
+  </div>
+</section>
+
+<div class="page-break"></div>
+
+<!-- ────────── THE PRODUCTS ────────── -->
+<section>
+  <div class="pre">The Products</div>
+  <h2>What's now public on bjptechnologies.co.tz</h2>
+
+  <h3>PMS — Property Management Software</h3>
+  <p><strong>Tagline:</strong> Property management, finally simple. &nbsp;<strong>Slug:</strong> <code>pms</code> · <strong>Order:</strong> 1 · <span class="pill ok">Live</span></p>
+  <p>Browser-based property-management software for Tanzanian landlords and managing agents. Multi-property workspace, automated TSh invoicing, M-Pesa / Tigo Pesa / Airtel Money tracking, renter self-service portal, bilingual EN/Swahili. The only product with a public live URL exposed (<code>pms.bjptechnologies.co.tz</code>).</p>
+
+  <h3>BMS — Business Management System</h3>
+  <p><strong>Tagline:</strong> Run your whole business from one screen. &nbsp;<strong>Slug:</strong> <code>bms</code> · <strong>Order:</strong> 2 · <span class="pill ok">Live</span></p>
+  <p>An all-in-one ERP for Tanzanian SMEs — POS, multi-warehouse inventory, invoicing, purchases, accounting, reports, CRM and HR — with mobile-money payments built in. Live URL kept private; demo requests route through the BJP contact form.</p>
+
+  <h3>Vikundi — VICOBA Management System</h3>
+  <p><strong>Tagline:</strong> VICOBA, finally without the cashbox. &nbsp;<strong>Slug:</strong> <code>vikundi</code> · <strong>Order:</strong> 3 · <span class="pill ok">Live</span></p>
+  <p>A complete management system for VICOBA savings groups and informal microfinance circles. Member register, contributions, loans, fines, social/funeral fund, M-Koba reconciliation, audit trail. Ships with honest-tone notes about single-group-per-installation and the proportional (vs. automated) share-out, so the public page doesn't oversell.</p>
+</section>
+
+<div class="page-break"></div>
+
+<!-- ────────── SESSION 15 ────────── -->
+<section>
+  <div class="pre">Session 15 · Phase 6.5 launch</div>
+  <h2>Products app + PMS as the first product</h2>
+  <p>Built the full <code>apps/products/</code> Django app from scratch and seeded PMS as the first record. The scope decision was Option A (full app) over Option B (single hardcoded PMS page) because a second product was already confirmed for follow-up — a hardcoded one-off would have meant rebuilding within a week.</p>
+
+  <div class="pr">
+    <span><span class="num">PR #68</span> &nbsp; feat(products): scaffold module + ship PMS</span>
+    <span class="status">Merged</span>
+  </div>
+
+  <h3>What was built</h3>
+  <table>
+    <thead><tr><th style="width:34%">Component</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td><code>Product</code> model</td><td>BaseModel UUID + 25 fields: identity, descriptions, problem statements, target users, features (JSON), differentiators, how-it-works, pricing, contact block, CTAs, SEO, assets, status (live / coming-soon), order</td></tr>
+      <tr><td>Public views</td><td><code>/products/</code> list and <code>/products/&lt;slug&gt;/</code> detail. Coming-soon products visible in admin but 404 on the public site</td></tr>
+      <tr><td>Unfold admin</td><td>Rich fieldsets (Identity / Descriptions / Detail sections / CTAs / Contact / SEO / Assets / Advanced), status badge, contact-state indicator, bulk Live/Coming-Soon actions, sidebar entry as first item under Website Content</td></tr>
+      <tr><td>Navbar &amp; mobile menu</td><td>Products link added as first item after About, before Services</td></tr>
+      <tr><td>Home page strip</td><td>New "Our Products" section between hero and Services, hidden when no live products exist</td></tr>
+      <tr><td>SEO</td><td>New <code>ProductSitemap</code> (priority 0.8) plus <code>products:list</code> in the static sitemap</td></tr>
+      <tr><td>PMS seed</td><td>Migration <code>0002_seed_pms</code> creates the PMS record from the team brief — 8 features, 5 problems, 5 target user groups, 5 differentiators, 4 how-it-works steps</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Key decisions</h3>
+  <div class="decision">
+    <div class="title">Assets as static paths, not <code>ImageField</code> uploads</div>
+    <div class="why">Mirrors the existing <code>Service.icon_svg</code> pattern. Assets git-tracked alongside code; avoids media / static dual-storage complexity. Migrating to <code>ImageField</code> later is straightforward when BJP wants self-serve uploads.</div>
+  </div>
+  <div class="decision">
+    <div class="title">Status filter at view level, not just admin</div>
+    <div class="why">Coming-soon products return 404 on the public site so BJP can stage Product #4 in admin without it leaking before the launch.</div>
+  </div>
+  <div class="decision">
+    <div class="title">Products tab leads first in the navbar</div>
+    <div class="why">Per user direction — the website should signal "we build products" before "we offer services."</div>
+  </div>
+</section>
+
+<div class="page-break"></div>
+
+<!-- ────────── SESSION 16 ────────── -->
+<section>
+  <div class="pre">Session 16 · Hotfix</div>
+  <h2>Three production rendering bugs</h2>
+  <p>Immediately after PMS deployed, the live site surfaced three independent bugs. All three diagnosed against the production URLs, fixed and regression-tested in one branch.</p>
+
+  <div class="pr">
+    <span><span class="num">PR #70</span> &nbsp; fix(products): admin 500 + brand vars + CSP-blocked icons</span>
+    <span class="status">Merged</span>
+  </div>
+
+  <h3>The three bugs</h3>
+  <table>
+    <thead><tr><th style="width:14%">Symptom</th><th style="width:46%">Root cause</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Admin 500</strong> on <code>/admin/products/product/</code></td>
+        <td>Django 6 hardened <code>format_html</code> to refuse zero-arg calls. <code>show_contact_state</code> called <code>format_html('&lt;span ...&gt;✓ filled&lt;/span&gt;')</code> with no placeholders → <code>TypeError</code>.</td>
+        <td>Switched to <code>mark_safe</code> (no user input to escape). Added admin-client changelist test as a regression catch.</td>
+      </tr>
+      <tr>
+        <td><strong>Hero / navbar unstyled</strong> on Products + Services + Industries</td>
+        <td>CLAUDE.md §4 documented BJP brand variables (<code>--navy</code>, <code>--accent</code>, etc.) but they were never actually defined in any loaded stylesheet. Inline gradients fell back to transparent — white banner, white navbar text became invisible against it.</td>
+        <td>Added the full 11-variable <code>:root</code> block to <code>bjp.css</code>. Single point of definition. Also resolved the pre-existing services / industries hero issues.</td>
+      </tr>
+      <tr>
+        <td><strong>Feature icons invisible</strong> on <code>/products/pms/</code></td>
+        <td>Bootstrap Icons stylesheet loaded from <code>cdn.jsdelivr.net</code> — not in the site's CSP allowlist. Stylesheet blocked, glyphs never rendered.</td>
+        <td>Dropped the BI CDN entirely. Migration <code>0003_remap_pms_icons</code> remapped all 8 PMS feature icons to Font Awesome Pro, which is already loaded site-wide.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>Decisions</h3>
+  <div class="decision">
+    <div class="title">Drop Bootstrap Icons rather than whitelist the CDN in CSP</div>
+    <div class="why">Font Awesome Pro is already loaded site-wide and is the convention everywhere else. Tightening CSP is preferred over loosening it.</div>
+  </div>
+  <div class="decision">
+    <div class="title">Migration <code>0003</code> updates the existing record instead of editing <code>0002</code></div>
+    <div class="why">CLAUDE.md §6 — never edit an applied migration. Fresh installs run <code>0002</code> then <code>0003</code>; end state is identical.</div>
+  </div>
+</section>
+
+<div class="page-break"></div>
+
+<!-- ────────── SESSION 17 ────────── -->
+<section>
+  <div class="pre">Session 17 · Products 2 &amp; 3</div>
+  <h2>BMS and Vikundi go live</h2>
+  <p>Seeded the second and third live products. PMS stayed untouched at order 1; BMS slotted in at order 2; Vikundi at order 3. Live URLs kept private per user direction — both demo CTAs route through the BJP contact form.</p>
+
+  <div class="pr">
+    <span><span class="num">PR #72</span> &nbsp; feat(products): ship BMS + Vikundi</span>
+    <span class="status">Merged</span>
+  </div>
+
+  <h3>What was added</h3>
+  <table>
+    <thead><tr><th style="width:30%">Change</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>New <code>disclosures</code> field on <code>Product</code></td><td>Optional honest-tone notes (one per line). Renders as a small "Currently shipping" callout on the detail page when populated. Hidden on PMS and BMS.</td></tr>
+      <tr><td>Migration <code>0005_seed_bms_vikundi</code></td><td>Idempotent. BMS: 10 features, 5 problems, 6 user groups, 5 screenshots. Vikundi: 12 features, 6 problems, 5 user groups, 5 screenshots, 2 disclosures.</td></tr>
+      <tr><td>BMS icon remap</td><td>Brief authored icons as <code>bi-*</code> (Bootstrap Icons). Remapped to <code>fa-regular fa-*</code> at seed time — same precedent as migration 0003 for PMS.</td></tr>
+      <tr><td>Demo-CTA routing</td><td>Internal CTAs (<code>/contact/?product=&lt;slug&gt;</code>) open in same tab; external ones (PMS today) still open in new tab. Conditional <code>target="_blank"</code>.</td></tr>
+      <tr><td><code>/contact/?product=</code> prefill</td><td><code>ContactView</code> reads the slug, prefills the message field with "I'd like to request a demo of &lt;Name&gt;." and renders a navy/cyan banner above the form so the visitor sees the form remembered which product they came from.</td></tr>
+      <tr><td>Assets</td><td>8 files each (hero, 5 feature screenshots, OG card, logo SVG) under <code>static/images/products/{bms,vikundi}/</code>.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Decisions</h3>
+  <div class="decision">
+    <div class="title">Live product URLs are NOT exposed on the public site</div>
+    <div class="why">Per user direction — <code>demo.bjptechnologies.co.tz</code> and <code>vikundi.bjptechnologies.co.tz</code> stay private. All demo requests funnel into the BJP contact form, with a <code>?product=</code> hint so the lead is attributed to the right product in the notification email.</div>
+  </div>
+  <div class="decision">
+    <div class="title">Vikundi keeps its honest-tone disclosures on the public page</div>
+    <div class="why">The brief explicitly flagged "single group per installation" and "share-out is a proportional summary, not automated." Carrying those into the public page beats discovering them on a sales call.</div>
+  </div>
+  <div class="decision">
+    <div class="title">Drop the secondary CTA for BMS and Vikundi</div>
+    <div class="why">Single primary action beats two competing ones when both would route to the same place.</div>
+  </div>
+</section>
+
+<div class="page-break"></div>
+
+<!-- ────────── SESSION 18 ────────── -->
+<section>
+  <div class="pre">Session 18 · Final polish</div>
+  <h2>Readable typography + BMS scope correction</h2>
+  <p>Screenshots from production flagged that body text on the detail page felt "too small to read." Investigation revealed the root cause was deeper than typography: Luminos sets <code>html { font-size: 10px }</code>, so every <code>rem</code>-based font-size in the detail template was rendering ~10× smaller than intended.</p>
+
+  <div class="pr">
+    <span><span class="num">PR #74</span> &nbsp; fix(products): readable typography + drop BMS Loans</span>
+    <span class="status">Merged</span>
+  </div>
+
+  <h3>The Luminos rem-base bug</h3>
+  <p>Original <code>0.95rem</code> values were rendering as <strong>9.5px</strong>, not 15.2px. Every typography commit before the root-cause fix only moved the needle from 10px to ~13px — still cramped. The final commit converted all <code>rem</code> font-sizes in <code>detail.html</code> to match Luminos's <code>1rem === 10px</code> convention, verified via <code>window.getComputedStyle</code>.</p>
+
+  <table>
+    <thead><tr><th>Element</th><th>Before</th><th>After</th></tr></thead>
+    <tbody>
+      <tr><td>Long-description paragraph</td><td>10.8 px</td><td><strong>18 px</strong></td></tr>
+      <tr><td>Problem / differentiator bullets</td><td>9.5 px</td><td><strong>16 px</strong></td></tr>
+      <tr><td>Feature card heading</td><td>11.5 px</td><td><strong>20 px</strong></td></tr>
+      <tr><td>Feature card description</td><td>9.5 px</td><td><strong>16 px</strong></td></tr>
+      <tr><td>Target-user card text</td><td>inherited</td><td><strong>16 px</strong></td></tr>
+      <tr><td>How-it-works step text</td><td>9.5 px</td><td><strong>16 px</strong></td></tr>
+      <tr><td>Hero tagline</td><td>11.5 px</td><td><strong>22 px</strong></td></tr>
+      <tr><td>Hero byline</td><td>10.5 px</td><td><strong>18 px</strong></td></tr>
+      <tr><td>Hero onboarding line</td><td>14 px</td><td><strong>15 px</strong> (now also readable on navy bg)</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Layout fixes shipped in the same PR</h3>
+  <ul>
+    <li><strong>How-It-Works grid:</strong> <code>col-lg-3</code> (4-up, cramped at ~270px / step) → <code>col-lg-6</code> (2-up, ~600px / step). Text wraps to 2-3 lines instead of 4-5.</li>
+    <li><strong>Hero block:</strong> tagline 1.35rem→2.2rem, byline 1.1rem→1.8rem, onboarding line lightened from <code>--grey</code> to <code>--grey-light</code> for legibility on the navy background.</li>
+  </ul>
+
+  <h3>BMS scope correction</h3>
+  <p>Removed "Loans / Microfinance" from BMS features — it was in the team brief but isn't actually integrated in the shipped BMS build. Migration <code>0006_drop_bms_loans_feature</code> targets the BMS record by slug, removes the entry idempotently, and is reversible (re-adds the original copy and icon on rollback). Vikundi's own Loans &amp; repayments feature is untouched.</p>
+  <p>Test <code>test_bms_has_10_features</code> updated to <code>test_bms_has_9_features</code>, plus a new <code>test_bms_does_not_advertise_loans_feature</code> locks the constraint so a future seed regression can't silently restore the entry.</p>
+</section>
+
+<div class="page-break"></div>
+
+<!-- ────────── ARCHITECTURE ────────── -->
+<section>
+  <div class="pre">Architecture</div>
+  <h2>How the module is structured</h2>
+
+  <div class="two-col">
+    <div>
+      <h3 style="margin-top:0;">Public surface</h3>
+      <ul>
+        <li><code>/products/</code> — list page (live products only)</li>
+        <li><code>/products/&lt;slug&gt;/</code> — detail page (live only; coming-soon → 404)</li>
+        <li>Sitemap entries — <code>products:list</code> + <code>ProductSitemap</code> for each product</li>
+        <li>Navbar tab + mobile sidebar entry</li>
+        <li>"Our Products" home-page strip above Services</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0;">Admin surface</h3>
+      <ul>
+        <li>Unfold-themed <code>ProductAdmin</code></li>
+        <li>Sidebar entry first under Website Content</li>
+        <li>Collapsible fieldsets (Identity / Descriptions / Detail / CTAs / Contact / SEO / Assets / Advanced)</li>
+        <li>Status badge + contact-block indicator on the changelist</li>
+        <li>Bulk actions: Mark Live · Mark Coming-Soon</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>The <code>Product</code> model</h3>
+  <p>Inherits <code>BaseModel</code> (UUID pk, timestamps). 25 user-editable fields cover the entire detail page without any per-product templates — the same template renders PMS, BMS and Vikundi by reading the database.</p>
+
+  <table>
+    <thead><tr><th style="width:24%">Group</th><th>Fields</th></tr></thead>
+    <tbody>
+      <tr><td>Identity</td><td><code>name · slug · tagline · byline · live_url · status · order</code></td></tr>
+      <tr><td>Descriptions</td><td><code>short_description · long_description</code></td></tr>
+      <tr><td>Detail sections</td><td><code>problem_statements · target_users · features (JSON) · differentiators · how_it_works_steps · pricing_summary · onboarding_promise · disclosures</code></td></tr>
+      <tr><td>CTAs</td><td><code>cta_primary_label · cta_primary_url · cta_secondary_label · cta_secondary_url</code></td></tr>
+      <tr><td>Contact block</td><td><code>contact_email · contact_phone · contact_hours · contact_whatsapp</code> (conditionally rendered)</td></tr>
+      <tr><td>SEO</td><td><code>meta_title · meta_description</code></td></tr>
+      <tr><td>Assets</td><td><code>hero_image · og_image · logo_image · accent_color · screenshots (JSON)</code></td></tr>
+    </tbody>
+  </table>
+
+  <h3>Adding a fourth product</h3>
+  <p>No code changes required. Either (a) add it via Django admin and upload assets into <code>static/images/products/&lt;slug&gt;/</code>, or (b) write a data migration mirroring <code>0005_seed_bms_vikundi</code>. The list view, detail view, navbar link, home page strip and sitemap all pick it up automatically once <code>status="live"</code>.</p>
+</section>
+
+<div class="page-break"></div>
+
+<!-- ────────── QUALITY ────────── -->
+<section>
+  <div class="pre">Quality</div>
+  <h2>Tests, lint and verification</h2>
+
+  <div class="stats">
+    <div class="stat"><div class="n">150</div><div class="l">Tests passing</div></div>
+    <div class="stat"><div class="n">100%</div><div class="l">Ruff clean</div></div>
+    <div class="stat"><div class="n">100%</div><div class="l">Black clean</div></div>
+    <div class="stat"><div class="n">0</div><div class="l">Lint warnings</div></div>
+  </div>
+
+  <h3>Regression coverage shipped this phase</h3>
+  <ul>
+    <li><strong>Model behaviour</strong> — slug auto-gen, <code>is_live</code>, <code>has_contact_block</code>, list helpers, JSON features serialisation, ordering.</li>
+    <li><strong>List + detail views</strong> — live-only filter, 404 for missing slugs, 404 for coming-soon products, conditional contact block render, conditional disclosures callout.</li>
+    <li><strong>Seeded records</strong> — PMS / BMS / Vikundi exist, are live, carry the expected feature count, use Font Awesome icons not Bootstrap Icons, route CTAs to the correct destination, use the company support email.</li>
+    <li><strong>Integration</strong> — navbar carries Products link, home page strip shows live products in order (PMS=1, BMS=2, Vikundi=3), <code>/contact/?product=</code> prefill, unknown <code>?product=</code> ignored silently.</li>
+    <li><strong>Admin</strong> — changelist renders end-to-end (catches the Django 6 <code>format_html</code> regression), change form renders for the seeded record, non-staff users denied.</li>
+    <li><strong>Scope locks</strong> — BMS has exactly 9 features and never advertises Loans / Microfinance; Vikundi keeps its two honest-tone disclosures.</li>
+  </ul>
+</section>
+
+<!-- ────────── ROADMAP ────────── -->
+<section>
+  <div class="pre">What's next</div>
+  <h2>Open follow-ups</h2>
+  <ul>
+    <li><strong>Contact block fields</strong> on PMS / BMS / Vikundi — phone, hours, WhatsApp — to be populated via admin when BJP provides values. The block hides automatically when empty, so no rush.</li>
+    <li><strong>Final PMS logo</strong> when BJP commissions one — current is a placeholder wordmark. Re-uploaded via admin.</li>
+    <li><strong>GA4 / Google Tag Manager CSP fix</strong> — <code>googletagmanager.com/gtag/js</code> is also blocked by the site CSP, breaking Phase 2 analytics. Separate hotfix (whitelist GTM + google-analytics in <code>script-src</code> + <code>connect-src</code>). Out of scope for Phase 6.5.</li>
+    <li><strong>Legacy logo 404</strong> — <code>SiteSettings.logo</code> points to a media file that isn't on production. Pre-existing, unrelated to products.</li>
+    <li><strong>Product #4</strong> — add via admin, no code changes required.</li>
+  </ul>
+</section>
+
+<footer>
+  <strong>BJP Technologies (T) Limited</strong> · Phase 6.5 Products Module Report · June 2026<br>
+  Generated from <code>SESSION_LOG.md</code> Sessions 15-18 · Pull Requests #68, #70, #72, #74<br>
+  bjptechnologies.co.tz
+</footer>
+
+</div>
+</body>
+</html>

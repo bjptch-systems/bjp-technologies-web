@@ -1292,3 +1292,63 @@ TEMPLATE FOR NEXT SESSION — copy this block and fill in:
 - [ ] Populate contact-block (phone / hours / WhatsApp) on PMS / BMS / Vikundi via admin when BJP provides values
 
 ---
+
+## Session 18 — 2026-08-23 EAT
+
+**Goal:** Remove the unlicensed Aeonik typeface from the site after a font-licensing enforcement notice from CoType / Font Radar (Ticket #25365965).
+**Branch:** fix/remove-aeonik-font
+**Status:** ✅ Complete (pending merge + deploy)
+
+### Background
+CoType Foundry, via Font Radar, sent three notices (2026-08-04, 2026-08-11, 2026-08-18) claiming bjptechnologies.co.tz served unlicensed Aeonik. The claim was verified as **true**: `static/fonts/6500595b785e358dcc2a2f3a_AeonikMedium.*` (5 files) was self-hosted and publicly downloadable (HTTP 200 confirmed on the live domain). The filename hash prefix is a Webflow CDN asset ID — the font arrived with a third-party front-end template, not a deliberate selection.
+
+### What Was Done
+- Verified the claim against the repo and the live site before making changes
+- Replaced `--font-primary`, `--font-medium`, `--font-secondary` in `static/css/style.css` with an Outfit-based stack (Outfit is already the documented brand body font and already loaded from Google Fonts in `base.html`)
+- Removed the `@font-face` block declaring `6500595b785e358dcc2a2f3a_AeonikMedium`
+- Replaced 2 remaining literal `"Aeonik", sans-serif` declarations (`body`, heading group)
+- Added `font-weight: 500` to the 19 rule blocks that used `var(--font-medium)` as a family without declaring a weight — the old `@font-face` carried `font-weight: 500`, so a family-only swap would have silently flattened those elements
+- Deleted all 5 Aeonik font files via `git rm`
+- Corrected `docs/generate_phase2_report.py` so the generated report no longer asserts Aeonik is in use
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| static/css/style.css | Modified | Aeonik → Outfit; @font-face removed; weight 500 restored on 19 blocks |
+| static/fonts/6500595b785e358dcc2a2f3a_AeonikMedium.{eot,svg,ttf,woff,woff2} | Deleted | The licensed asset — 5 files |
+| docs/generate_phase2_report.py | Modified | Dropped Aeonik from font inventory strings |
+| SESSION_LOG.md | Modified | This entry |
+
+### Migrations
+- None required.
+
+### Tests
+- Tests written: 0 (no behavioural change)
+- Tests passing: 150 / 150
+- `ruff check .` clean; `black --check .` clean (118 files)
+- `collectstatic` succeeds under `CompressedManifestStaticFilesStorage` — confirms no dangling font references (manifest storage hard-fails on missing files referenced from CSS)
+- Verified 0 Aeonik references remain in `public/static/css/style.css`, `staticfiles.json`, and `public/static/fonts/`
+
+### Decisions Made
+- **Decision:** Replace Aeonik with Outfit rather than licensing Aeonik.
+  **Reason:** Outfit is already the documented brand body font, already loaded, openly licensed, and geometrically close. Zero new dependencies and no recurring licence cost.
+- **Decision:** Explicitly add `font-weight: 500` to 19 blocks instead of swapping the family alone.
+  **Reason:** The removed `@font-face` supplied weight 500 implicitly. A family-only swap would have degraded the type hierarchy across nav, footer, blog, pricing and team components without any visible error.
+- **Decision:** Left the pre-existing invalid `font-weight: var(--font-medium)` at `static/css/style.css` (`.title-style-4-center .title`) untouched.
+  **Reason:** It is an inherited template bug that resolves to an invalid value and is ignored by browsers. Fixing it would change rendering — out of scope for an urgent legal remediation. Tracked as follow-up.
+- **Decision:** Left the historical Aeonik mention in the Session 2 log entry intact.
+  **Reason:** The session log is a factual record of what happened; editing history to remove evidence is bad practice. The removal is recorded here instead.
+- **Decision:** Deferred the Font Awesome Pro removal to a separate branch.
+  **Reason:** Keeps the urgent legal fix small and fast to review/deploy. See blockers.
+
+### Blockers / Issues
+- **Second unlicensed asset still present:** `static/css/plugins/fontawesome.css` is **Font Awesome Pro 6.1.1** (commercial licence, per its own header comment), with Pro-only `fa-duotone-900` and `fa-light-300` font files in `static/fonts/`. Same third-party-template origin, also publicly served. Not addressed in this branch — needs an icon audit to map Pro-only icons to Free equivalents before removal.
+
+### Next Session Should
+- [ ] Merge `fix/remove-aeonik-font` → `develop` → `main` and deploy — the exposure is only closed once it is live
+- [ ] After deploy: confirm the Aeonik URLs return 404 on bjptechnologies.co.tz, then reply to CoType (Ticket #25365965)
+- [ ] Visually check nav, footer, pricing, blog and team sections for weight/typography regressions
+- [ ] Open `fix/remove-fontawesome-pro` — audit Pro-only icon usage and migrate to Font Awesome Free
+- [ ] Consider fixing the invalid `font-weight: var(--font-medium)` in `.title-style-4-center .title`
+
+---
