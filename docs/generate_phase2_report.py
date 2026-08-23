@@ -537,7 +537,7 @@ def build():
                 check2("static/css/vendor/", "bootstrap.min.css"),
                 check2(
                     "static/fonts/",
-                    "Aeonik (Regular + Medium) + FontAwesome 6 Pro (brands, solid, regular, light, duotone)",
+                    "FontAwesome 6 (brands, solid, regular, light, duotone)",
                 ),
                 check2(
                     "static/js/plugins/",
@@ -625,8 +625,8 @@ def build():
         ],
         [
             "Fonts",
-            "Google Fonts + Aeonik",
-            "Loaded in base.html head — DM Serif Display, Outfit, Space Mono, Aeonik",
+            "Google Fonts",
+            "Loaded in base.html head — DM Serif Display, Outfit, Space Mono",
         ],
         [
             "Animations",
