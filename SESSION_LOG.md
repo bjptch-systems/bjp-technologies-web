@@ -1352,3 +1352,63 @@ CoType Foundry, via Font Radar, sent three notices (2026-08-04, 2026-08-11, 2026
 - [ ] Consider fixing the invalid `font-weight: var(--font-medium)` in `.title-style-4-center .title`
 
 ---
+
+## Session 19 — 2026-08-23 EAT
+
+**Goal:** Fix the Google Maps embed on the contact page ("This content is blocked") and the GA4 tag, both blocked by the site's own Content-Security-Policy.
+**Branch:** fix/csp-maps-ga4
+**Status:** ✅ Complete (pending merge + deploy)
+
+### Root Cause
+`apps/core/middleware.py` sent a CSP with **no `frame-src` directive**. Per the CSP spec, an absent `frame-src` falls back to `child-src` and then to `default-src`, which was `'self'` — so the browser refused the Google Maps iframe on `/contact/` and rendered Chrome's "This content is blocked. Contact the site owner to fix the issue." placeholder.
+
+The same header also broke GA4, which explains the open item carried since Session 16:
+- `script-src 'self' …` did not list `googletagmanager.com`, so the gtag.js loader in `base.html:11` was blocked
+- `connect-src 'self'` blocked the measurement beacons even if the loader had run
+
+Confirmed the map URL itself was fine — the live page served a valid populated `src` (`https://www.google.com/maps?q=-6.750417,39.090111&z=17&output=embed`). Ruled out `X_FRAME_OPTIONS = "DENY"`, which governs who may frame *us*, not what we may frame.
+
+### What Was Done
+- Added `frame-src https://www.google.com https://maps.google.com`
+- Added `https://www.googletagmanager.com` to `script-src`
+- Added `https://www.google-analytics.com`, `https://*.google-analytics.com`, `https://*.analytics.google.com` to `connect-src` (regional collectors use subdomains)
+- Kept `default-src 'self'` and `frame-ancestors 'none'` untouched
+- Documented each third-party origin and why it is needed in the class docstring
+- Added `apps/core/tests/test_middleware.py` — 7 tests
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| apps/core/middleware.py | Modified | Added frame-src; widened script-src and connect-src for GA4 |
+| apps/core/tests/test_middleware.py | Created | 7 tests incl. regression cover for the map |
+| SESSION_LOG.md | Modified | This entry |
+
+### Migrations
+- None required.
+
+### Tests
+- Tests written: 7
+- Tests passing: 157 / 157 (was 150)
+- `ruff check .` clean; `black --check .` clean (119 files)
+- Coverage areas: CSP directive parsing, map regression, GA4 loader, GA4 beacons, clickjacking protection, wildcard guard
+
+### Decisions Made
+- **Decision:** Test the middleware class directly instead of through the Django test client.
+  **Reason:** `ContentSecurityPolicyMiddleware` is only registered in `config/settings/production.py`. A client-based test under development/CI settings would never exercise it and would pass vacuously.
+- **Decision:** Parse the header into a directive→sources map in the tests rather than asserting on the raw string.
+  **Reason:** Keeps tests robust to directive ordering and whitespace; a future reformat of the policy shouldn't produce false failures.
+- **Decision:** Added `test_clickjacking_protection_retained` and `test_no_wildcard_script_or_default_source`.
+  **Reason:** This change *widens* a security header. The guard tests make it explicit that `frame-ancestors 'none'` and the absence of wildcards are intentional invariants, so a future "just add a wildcard" fix fails loudly.
+- **Decision:** Fixed map and GA4 in one branch.
+  **Reason:** Same file, three lines apart, same root cause. Splitting them would mean two reviews and two deploys for one header.
+
+### Blockers / Issues
+- None.
+
+### Next Session Should
+- [ ] Merge → `develop` → `main`, deploy, then confirm the map renders and GA4 fires in a real browser
+- [ ] Verify GA4 realtime shows traffic — it has been recording nothing since the CSP middleware landed
+- [ ] Add `--clear` to `.cpanel.yml` `collectstatic` — orphaned files currently survive deletion on the server indefinitely (this is what kept the unlicensed Aeonik font publicly downloadable in Session 18)
+- [ ] Open `fix/remove-fontawesome-pro` — Font Awesome Pro 6.1.1 is still bundled and served
+
+---
