@@ -82,9 +82,9 @@
   --s-extra-bold: 400;
   --s-black: 400;
   --transition: 0.3s;
-  --font-primary: "Aeonik", sans-serif;
-  --font-medium: "6500595b785e358dcc2a2f3a_AeonikMedium", sans-serif;
-  --font-secondary: "Aeonik", sans-serif;
+  --font-primary: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-medium: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-secondary: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-3: "fontawesome";
   --font-size-b1: 16px;
   --font-size-b2: 16px;
@@ -100,12 +100,6 @@
   --h6: 18px;
 }
 
-@font-face {
-  font-family: "6500595b785e358dcc2a2f3a_AeonikMedium";
-  src: url("../fonts/6500595b785e358dcc2a2f3a_AeonikMedium.eot");
-  src: url("../fonts/6500595b785e358dcc2a2f3a_AeonikMedium.eot") format("embedded-opentype"), url("../fonts/6500595b785e358dcc2a2f3a_AeonikMedium.woff2") format("woff2"), url("../fonts/6500595b785e358dcc2a2f3a_AeonikMedium.woff") format("woff"), url("../fonts/6500595b785e358dcc2a2f3a_AeonikMedium.ttf") format("truetype"), url("../fonts/6500595b785e358dcc2a2f3a_AeonikMedium.svg") format("svg");
-  font-weight: 500;
-}
 * {
   box-sizing: border-box;
 }
@@ -124,7 +118,7 @@ body {
   line-height: var(--line-height-b1);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-family: "Aeonik", sans-serif;
+  font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   color: var(--color-body);
   font-weight: var(--p-regular);
   position: relative;
@@ -195,7 +189,7 @@ h6,
 .h5,
 .h6 {
   word-break: break-word;
-  font-family: "Aeonik", sans-serif;
+  font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.4074;
   color: var(--color-heading-1);
 }
@@ -12553,6 +12547,7 @@ Copyright (c) 2015 Daniel Eden
   color: #000000;
   font-size: 16px;
   font-family: var(--font-medium);
+  font-weight: 500;
 }
 
 .header--sticky.sticky .nav-area ul li > a.nav-link {
@@ -14609,6 +14604,7 @@ li.has-dropdown:hover .submenu {
 @media only screen and (max-width: 575px) {
   .single-pricing-area .head span {
     font-family: var(--font-medium) !important;
+    font-weight: 500 !important;
     font-size: 22px;
   }
 }
@@ -15382,6 +15378,7 @@ li.has-dropdown:hover .submenu {
 .single-blog-area-start .inner-content-area .top-area span {
   color: var(--color-primary);
   font-family: var(--font-medium);
+  font-weight: 500;
   display: block;
   margin-bottom: 10px;
 }
@@ -15472,6 +15469,7 @@ li.has-dropdown:hover .submenu {
 .single-blog-list-area-right-content .tag {
   color: #6D6D6D;
   font-family: var(--font-medium);
+  font-weight: 500;
   display: block;
   margin-bottom: 7px;
 }
@@ -15500,6 +15498,7 @@ li.has-dropdown:hover .submenu {
 .single-blog-list-area-right-content .bottom-author-area .author-area-info .title {
   margin-bottom: 3px;
   font-family: var(--font-medium);
+  font-weight: 500;
   transition: 0.3s;
 }
 .single-blog-list-area-right-content .bottom-author-area .author-area-info .title:hover {
@@ -15522,6 +15521,7 @@ li.has-dropdown:hover .submenu {
 }
 .single-blog-style-three .inner .tag {
   font-family: var(--font-medium);
+  font-weight: 500;
   color: #6D6D6D;
   font-size: 14px;
 }
@@ -15798,6 +15798,7 @@ li.has-dropdown:hover .submenu {
   margin-top: 5px;
   transition: 0.3s;
   font-family: var(--font-medium);
+  font-weight: 500;
 }
 @media only screen and (max-width: 479px) {
   .rts-single-wized .recent-post-single .post-title .title {
@@ -16666,6 +16667,7 @@ li.has-dropdown:hover .submenu {
   opacity: 0.7;
   margin-bottom: 15px;
   font-family: var(--font-medium);
+  font-weight: 500;
 }
 .single-nav-area-footer ul {
   margin: 0;
@@ -18361,6 +18363,7 @@ li.has-dropdown:hover .submenu {
   padding: 0;
   margin: 0;
   font-family: var(--font-medium);
+  font-weight: 500;
 }
 .team-single-banner-area .social-area-wrapper .social-one-area {
   display: flex;
@@ -18524,6 +18527,7 @@ li.has-dropdown:hover .submenu {
 }
 .shedule-consulting-left .check-wrapper p.top {
   font-family: var(--font-medium);
+  font-weight: 500;
   font-size: 20px;
 }
 .shedule-consulting-left .check-wrapper .single-check {
@@ -18534,6 +18538,7 @@ li.has-dropdown:hover .submenu {
 }
 .shedule-consulting-left p.call {
   font-family: var(--font-medium);
+  font-weight: 500;
   font-size: 20px;
   margin-top: 35px;
 }
@@ -18551,6 +18556,7 @@ li.has-dropdown:hover .submenu {
 .consulting-form p {
   font-size: 24px;
   font-family: var(--font-medium);
+  font-weight: 500;
 }
 @media only screen and (max-width: 479px) {
   .consulting-form p {
@@ -18733,6 +18739,7 @@ li.has-dropdown:hover .submenu {
 }
 .review-area-partner .left .information {
   font-family: var(--font-medium);
+  font-weight: 500;
   font-size: 16px;
 }
 .review-area-partner .left .information p {
@@ -18752,6 +18759,7 @@ li.has-dropdown:hover .submenu {
 .review-area-partner .mid .info p {
   margin: 0;
   font-family: var(--font-medium);
+  font-weight: 500;
 }
 .review-area-partner .mid .info p span {
   color: var(--color-primary);
@@ -18914,6 +18922,7 @@ li.has-dropdown:hover .submenu {
 }
 .shedule-consulting-left .check-wrapper p.top {
   font-family: var(--font-medium);
+  font-weight: 500;
   font-size: 20px;
 }
 .shedule-consulting-left .check-wrapper .single-check {
@@ -18924,6 +18933,7 @@ li.has-dropdown:hover .submenu {
 }
 .shedule-consulting-left p.call {
   font-family: var(--font-medium);
+  font-weight: 500;
   font-size: 20px;
   margin-top: 35px;
 }
@@ -18941,6 +18951,7 @@ li.has-dropdown:hover .submenu {
 .consulting-form p {
   font-size: 24px;
   font-family: var(--font-medium);
+  font-weight: 500;
 }
 @media only screen and (max-width: 479px) {
   .consulting-form p {
@@ -19563,6 +19574,7 @@ header.header-three .sub-dropdown .submenu.third-lvl.base {
 .with-megamenu .submenu .single-menu .single-service-area-wrapper .info .title {
   font-size: 20px;
   font-family: var(--font-medium);
+  font-weight: 500;
   transition: 0.3s;
   padding-bottom: 5px;
 }
@@ -19588,6 +19600,7 @@ header.header-three .sub-dropdown .submenu.third-lvl.base {
   margin-bottom: 0;
   font-size: 20px;
   font-family: var(--font-medium);
+  font-weight: 500;
 }
 .with-megamenu .submenu .single-menu li .industries {
   padding: 5px 0 !important;
