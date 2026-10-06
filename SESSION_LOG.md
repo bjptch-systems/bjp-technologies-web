@@ -1412,3 +1412,58 @@ Confirmed the map URL itself was fine — the live page served a valid populated
 - [ ] Open `fix/remove-fontawesome-pro` — Font Awesome Pro 6.1.1 is still bundled and served
 
 ---
+
+---
+
+## Session 20 — 2026-10-06 10:30 EAT
+
+**Goal:** Replace the template hero background with a BJP-branded image and change the company phone to +255 764 764 011.
+**Branch:** fix/hero-image-and-phone
+**Status:** ✅ Complete
+
+### What Was Done
+- Generated a new hero background (2880×1506 WebP, ~57 KB) in brand navy/blue/cyan built around the BJP three-circle logo mark; previewed and approved by the developer before applying
+- Pointed `.banner-four-bg` at the new image instead of the Luminos template `banner/04.webp`
+- Changed the `SiteSettings.phone` default and added a migration that updates the live row on deploy (only when it still holds the old number)
+- Removed hardcoded old number from the contact confirmation email, contact success page and service detail sidebar — all now read `company.phone`
+- Added 2 tests for the phone in the confirmation email and on the success page
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| static/images/banner/bjp-hero.webp | Created | New branded hero background |
+| static/css/style.css | Modified | `.banner-four-bg` uses bjp-hero.webp |
+| apps/core/models.py | Modified | Phone default → +255 764 764 011 |
+| apps/core/migrations/0009_update_company_phone.py | Created | AlterField + RunPython data update |
+| apps/contact/views.py | Modified | Confirmation email uses `SiteSettings.get().phone` |
+| apps/contact/templates/contact/success.html | Modified | Uses `{{ company.phone }}` |
+| apps/services/templates/services/detail.html | Modified | Uses `{{ company.phone }}` |
+| apps/contact/tests/test_views.py | Modified | 2 new tests |
+| CLAUDE.md | Modified | Contact number updated |
+
+### Migrations
+- Migration name: `0009_update_company_phone`
+- Applied: ✅ Yes (local); production applies via CI/CD deploy
+
+### Tests
+- Tests written: 2
+- Tests passing: 159 / 159
+- Coverage areas: views (contact email, success page)
+
+### Decisions Made
+- Decision: Update the phone via data migration rather than asking for an admin edit.
+  Reason: Production changes on deploy with no manual step; the guard leaves any different admin-set value untouched.
+- Decision: Replace hardcoded numbers with `company.phone`.
+  Reason: Future number changes need only an admin edit.
+- Decision: Keep `banner/04.webp` in the repo for now.
+  Reason: Out of scope; remove in a template-asset cleanup.
+
+### Blockers / Issues
+- venv script shebangs are broken (`venv/bin/pytest` → "required file not found"), likely from the space in the project path; tools run fine via `venv/bin/python -m <tool>`.
+
+### Next Session Should
+- [ ] Verify the hero and footer on production after merge to main
+- [ ] Recreate the venv to fix the broken shebangs
+- [ ] Remaining Phase 6 items (page speed, image optimization, final audit)
+
+---

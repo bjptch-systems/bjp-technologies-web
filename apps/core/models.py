@@ -20,7 +20,7 @@ class SiteSettings(models.Model):
     name = models.CharField(max_length=120, default="BJP Technologies (T) Limited")
     tagline = models.CharField(max_length=200, default="Secure Technology. Scalable Growth.")
     email = models.EmailField(default="info@bjptechnologies.co.tz")
-    phone = models.CharField(max_length=30, default="+255 678 290 994")
+    phone = models.CharField(max_length=30, default="+255 764 764 011")
     address = models.CharField(max_length=200, default="Ubungo – Dar es Salaam, Tanzania")
     postal = models.CharField(max_length=100, default="P.O Box 7276, Msakuzi – Mbezi")
     domain = models.CharField(max_length=100, default="bjptechnologies.co.tz")

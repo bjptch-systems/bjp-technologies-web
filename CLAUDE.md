@@ -15,7 +15,7 @@
 **Primary Domain:** bjptechnologies.co.tz
 **Alias Domain:** technologies.bejundas.co.tz (301 redirects to primary — not the Django host)
 **Parent Platform:** bejundas.co.tz (multi-vertical business platform)
-**Contact:** info@bjptechnologies.co.tz | +255 678 290 994
+**Contact:** info@bjptechnologies.co.tz | +255 764 764 011
 **Postal:** P.O Box 7276, Msakuzi – Mbezi
 
 **What this project is:**

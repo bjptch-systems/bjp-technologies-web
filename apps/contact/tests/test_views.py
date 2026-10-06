@@ -155,3 +155,26 @@ def test_rate_limit_resets_after_window(client, db):
         with patch("apps.contact.views.ContactView._send_confirmation"):
             response = client.post(CONTACT_URL, data=post_data(), REMOTE_ADDR=ip)
     assert response.status_code == 302
+
+
+# --- Company phone ---
+
+
+@pytest.mark.django_db
+def test_confirmation_email_uses_company_phone(client, service, mailoutbox):
+    from apps.core.models import SiteSettings
+
+    settings_obj = SiteSettings.get()
+    settings_obj.phone = "+255 764 764 011"
+    settings_obj.save()
+    client.post(CONTACT_URL, post_data(service))
+    confirmation = next(m for m in mailoutbox if m.to == ["zawadi@example.com"])
+    assert "+255 764 764 011" in confirmation.body
+    assert "678 290 994" not in confirmation.body
+
+
+@pytest.mark.django_db
+def test_success_page_shows_company_phone(client):
+    response = client.get(SUCCESS_URL)
+    assert "+255 764 764 011" in response.content.decode()
+    assert 'href="tel:+255764764011"' in response.content.decode()
