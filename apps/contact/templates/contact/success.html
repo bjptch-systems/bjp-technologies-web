@@ -48,10 +48,10 @@
                     <p style="color:var(--text-body); margin-bottom:12px; font-size:15px;">
                         <strong>Need a faster response?</strong> Call us directly:
                     </p>
-                    <a href="tel:+255678290994"
+                    <a href="tel:{{ company.phone|cut:' ' }}"
                        style="font-size:22px; font-weight:700; color:var(--navy); text-decoration:none; letter-spacing:0.5px;">
                         <i class="fa-regular fa-phone" style="color:var(--accent); margin-right:8px;"></i>
-                        +255 678 290 994
+                        {{ company.phone }}
                     </a>
                     <p style="color:var(--grey); font-size:13px; margin-top:8px; margin-bottom:0;">
                         Mon – Sat &nbsp;|&nbsp; 8 AM – 6 PM EAT
