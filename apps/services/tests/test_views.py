@@ -73,3 +73,13 @@ class TestServiceDetailView:
     def test_inactive_service_detail_returns_404(self, client, inactive_service):
         response = client.get(reverse("services:detail", kwargs={"slug": inactive_service.slug}))
         assert response.status_code == 404
+
+    def test_detail_shows_service_image(self, client, service):
+        service.image = "bjp-software-development.webp"
+        service.save()
+        response = client.get(reverse("services:detail", kwargs={"slug": service.slug}))
+        assert "images/service/bjp-software-development.webp" in response.content.decode()
+
+    def test_detail_falls_back_when_image_blank(self, client, service):
+        response = client.get(reverse("services:detail", kwargs={"slug": service.slug}))
+        assert "images/service/bjp-services.webp" in response.content.decode()

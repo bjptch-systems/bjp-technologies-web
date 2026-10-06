@@ -66,3 +66,15 @@ class TestIndustryDetailView:
     def test_inactive_industry_detail_returns_404(self, client, inactive_industry):
         response = client.get(reverse("industries:detail", kwargs={"slug": inactive_industry.slug}))
         assert response.status_code == 404
+
+    def test_detail_shows_industry_image(self, client, industry):
+        industry.image = "bjp-healthcare.webp"
+        industry.save()
+        response = client.get(reverse("industries:detail", kwargs={"slug": industry.slug}))
+        assert "images/industry/bjp-healthcare.webp" in response.content.decode()
+
+    def test_detail_falls_back_when_image_blank(self, client, industry):
+        response = client.get(reverse("industries:detail", kwargs={"slug": industry.slug}))
+        content = response.content.decode()
+        assert "images/industry/bjp-industry-detail.webp" in content
+        assert "images/industry/02.webp" not in content

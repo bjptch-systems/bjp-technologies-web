@@ -41,9 +41,9 @@ class ServiceAdmin(ModelAdmin):
             },
         ),
         (
-            "Icon",
+            "Icon & Image",
             {
-                "fields": ("icon_svg",),
+                "fields": ("icon_svg", "image"),
                 "classes": ("collapse",),
             },
         ),

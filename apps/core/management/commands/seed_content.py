@@ -10,6 +10,7 @@ SERVICES = [
         "tagline": "Custom software built for East African businesses",
         "order": 1,
         "icon_svg": "22.svg",
+        "image": "bjp-software-development.webp",
         "description": (
             "We design and build custom software that fits exactly how your business works — "
             "not the other way around. From ERP systems and payroll platforms to loan management "
@@ -31,6 +32,7 @@ SERVICES = [
         "tagline": "Professional digital presence for your organisation",
         "order": 2,
         "icon_svg": "23.svg",
+        "image": "bjp-website-digital-solutions.webp",
         "description": (
             "Your website is your most visible business asset. We build corporate websites, "
             "e-commerce platforms, and content management systems that are fast, secure, and "
@@ -50,6 +52,7 @@ SERVICES = [
         "tagline": "Scalable, reliable infrastructure on leading cloud platforms",
         "order": 3,
         "icon_svg": "24.svg",
+        "image": "bjp-cloud-infrastructure.webp",
         "description": (
             "We design, deploy, and manage cloud infrastructure on AWS, Oracle Cloud, and "
             "DigitalOcean — giving your business the reliability and scalability you need to "
@@ -71,6 +74,7 @@ SERVICES = [
         "tagline": "Protect your systems, data, and reputation",
         "order": 4,
         "icon_svg": "25.svg",
+        "image": "bjp-cybersecurity.webp",
         "description": (
             "Security is not optional — it is foundational. We apply enterprise-grade security "
             "practices to every engagement: web application firewalls, vulnerability assessments, "
@@ -91,6 +95,7 @@ SERVICES = [
         "tagline": "Your IT department — without the overhead",
         "order": 5,
         "icon_svg": "26.svg",
+        "image": "bjp-managed-it-services.webp",
         "description": (
             "Running IT in-house is expensive and distracting. Our managed IT service gives you "
             "a dedicated team that monitors your infrastructure around the clock, handles routine "
@@ -112,6 +117,7 @@ SERVICES = [
         "tagline": "Connect your software to Tanzania's payment ecosystem",
         "order": 6,
         "icon_svg": "27.svg",
+        "image": "bjp-payment-system-integrations.webp",
         "description": (
             "Tanzania's digital economy runs on mobile money. We integrate M-Pesa, Tigo Pesa, "
             "and Airtel Money natively into your software — not as an afterthought. We also connect "
@@ -131,6 +137,7 @@ SERVICES = [
         "tagline": "Strategic technology guidance for growing organisations",
         "order": 7,
         "icon_svg": "28.svg",
+        "image": "bjp-it-consulting-advisory.webp",
         "description": (
             "Technology decisions made today shape your business for years. Our consulting "
             "team works alongside your leadership to design infrastructure that scales, plan "
@@ -153,7 +160,7 @@ INDUSTRIES = [
         "slug": "startups-smes",
         "tagline": "Affordable, scalable IT that grows with you",
         "order": 1,
-        "image": "01.webp",
+        "image": "bjp-startups-smes.webp",
         "description": (
             "Early-stage companies and SMEs need technology that delivers results without "
             "enterprise price tags. We build the systems, websites, and infrastructure that "
@@ -174,7 +181,7 @@ INDUSTRIES = [
         "slug": "financial-institutions",
         "tagline": "Secure, compliant systems for SACCOS and microfinance",
         "order": 2,
-        "image": "02.webp",
+        "image": "bjp-financial-institutions.webp",
         "description": (
             "SACCOS, microfinance institutions, and banks operate in a high-stakes environment "
             "where security, accuracy, and compliance are non-negotiable. We build and maintain "
@@ -195,7 +202,7 @@ INDUSTRIES = [
         "slug": "ngos-development",
         "tagline": "Technology that amplifies your mission",
         "order": 3,
-        "image": "03.webp",
+        "image": "bjp-ngos-development.webp",
         "description": (
             "NGOs and development organisations need reliable, cost-effective technology that "
             "lets them focus on impact rather than IT problems. We deliver websites, data "
@@ -216,7 +223,7 @@ INDUSTRIES = [
         "slug": "education",
         "tagline": "Digital tools for modern learning environments",
         "order": 4,
-        "image": "06.webp",
+        "image": "bjp-education.webp",
         "description": (
             "Schools, colleges, and training institutions need technology that works reliably "
             "for students, staff, and administrators alike. We build student management systems, "
@@ -237,7 +244,7 @@ INDUSTRIES = [
         "slug": "healthcare",
         "tagline": "Reliable IT for patient-centred organisations",
         "order": 5,
-        "image": "07.webp",
+        "image": "bjp-healthcare.webp",
         "description": (
             "Healthcare organisations handle sensitive patient data that demands the highest "
             "levels of security and reliability. We build and maintain the systems, secure "
@@ -258,7 +265,7 @@ INDUSTRIES = [
         "slug": "retail-wholesale",
         "tagline": "Inventory, sales, and payments — all connected",
         "order": 6,
-        "image": "08.webp",
+        "image": "bjp-retail-wholesale.webp",
         "description": (
             "Retail and wholesale businesses need fast, reliable systems at the point of sale "
             "and across the supply chain. We build the inventory management, POS, and e-commerce "
