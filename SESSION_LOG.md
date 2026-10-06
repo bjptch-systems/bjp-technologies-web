@@ -1467,3 +1467,64 @@ Confirmed the map URL itself was fine — the live page served a valid populated
 - [ ] Remaining Phase 6 items (page speed, image optimization, final audit)
 
 ---
+
+---
+
+## Session 21 — 2026-10-06 11:30 EAT
+
+**Goal:** Replace the template's stock photos with BJP-branded images across all pages.
+**Branch:** feature/branded-images
+**Status:** ✅ Complete
+
+### What Was Done
+- Generated 22 branded images (navy/blue/cyan line art, matching the new hero); previewed page by page and approved by the developer before applying
+- High resolution: full-width banners 3840px wide, in-page images 2560px wide, WebP q90 (65–167 KB each, 2.7 MB total)
+- Each service and each industry now has its own image (previously all detail pages shared the same stock photos)
+- Added `Service.image` field (editable in admin under "Icon & Image"), mirroring `Industry.image`
+- Fixed bug: industry detail template used `industry.image.url` on a CharField, so per-industry images never rendered
+- Moved per-service artwork up so the overlapping content card no longer covers it (checked in browser)
+- Added `docs/generate_brand_images.py` to regenerate or tweak the images
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| static/images/{about,service,industry,contact}/bjp-*.webp | Created | 22 branded images |
+| static/css/style.css | Modified | About, service and contact banner backgrounds |
+| apps/main/templates/main/home.html, about.html | Modified | New about images |
+| apps/services/templates/services/list.html, detail.html | Modified | New images; per-service image with fallback |
+| apps/industries/templates/industries/list.html, detail.html | Modified | New images; image bug fixed |
+| apps/contact/templates/contact/contact.html | Modified | New banner |
+| apps/services/models.py, admin.py | Modified | `image` field + admin fieldset |
+| apps/services/migrations/0002_service_image.py | Created | AddField + set each service's image (blanks only) |
+| apps/industries/migrations/0002_branded_industry_images.py | Created | Swap seeded template images to branded (seeded/blank values only) |
+| apps/core/management/commands/seed_content.py | Modified | Seeds the new image filenames |
+| apps/services/tests/test_views.py, apps/industries/tests/test_views.py | Modified | 4 new tests |
+| docs/generate_brand_images.py | Created | Image generator |
+
+### Migrations
+- `services.0002_service_image`, `industries.0002_branded_industry_images`
+- Applied: ✅ Yes (local); production applies via CI/CD deploy
+
+### Tests
+- Tests written: 4
+- Tests passing: 163 / 163
+- Coverage areas: service/industry detail views (own image + fallback)
+
+### Decisions Made
+- Decision: Branded line-art graphics instead of stock or AI "team" photos.
+  Reason: No real team/office photos yet; fake team photos would hurt trust. Swap in real photos later via the same file paths.
+- Decision: Data migrations only fill blank or original seeded values.
+  Reason: Never overwrite an image an admin has chosen.
+- Decision: Old template images left in the repo.
+  Reason: Out of scope; remove in a later template-asset cleanup.
+
+### Blockers / Issues
+- None
+
+### Next Session Should
+- [ ] Verify all pages on production after merge to main
+- [ ] Replace people-slot graphics (About, Home strip, Contact) with real team/office photos when available
+- [ ] Clean up unused Luminos template images
+- [ ] Remaining Phase 6 items (page speed, image optimization, final audit)
+
+---

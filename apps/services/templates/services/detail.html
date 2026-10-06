@@ -9,7 +9,7 @@
 
 {% block content %}
 
-<!-- Service Banner — CSS class handles background-image: service/06.webp -->
+<!-- Service Banner — CSS class handles background-image: service/bjp-service-banner.webp -->
 <div class="container-large">
     <div class="service-single-area-banner jarallax" data-jarallax='{"speed": 0.3}' style="position:relative; display:flex; align-items:flex-end;">
         <!-- dark overlay -->
@@ -35,12 +35,16 @@
         <div class="row g-5">
             <div class="col-lg-6">
                 <div class="thumbnail-area-large-service-detaile-mid jarallax jara-mask-1" data-jarallax='{"speed": 0.2}'>
-                    <img class="jarallax-img" src="{% static 'images/service/07.webp' %}" alt="{{ service.name }}">
+                    {% if service.image %}
+                    <img class="jarallax-img" src="{% static 'images/service/'|add:service.image %}" alt="{{ service.name }}">
+                    {% else %}
+                    <img class="jarallax-img" src="{% static 'images/service/bjp-services.webp' %}" alt="{{ service.name }}">
+                    {% endif %}
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="thumbnail-area-large-service-detaile-mid jarallax jara-mask-1" data-jarallax='{"speed": 0.2}'>
-                    <img class="jarallax-img" src="{% static 'images/service/08.webp' %}" alt="{{ service.name }} team">
+                    <img class="jarallax-img" src="{% static 'images/service/bjp-service-detail.webp' %}" alt="BJP Technologies team">
                 </div>
             </div>
         </div>

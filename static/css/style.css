@@ -13519,7 +13519,7 @@ li.has-dropdown:hover .submenu {
 }
 
 .service-single-area-banner {
-  background-image: url(../images/service/06.webp);
+  background-image: url(../images/service/bjp-service-banner.webp);
   height: 600px !important;
 }
 @media only screen and (max-width: 575px) {
@@ -13777,7 +13777,7 @@ li.has-dropdown:hover .submenu {
 }
 
 .about-banner-area-bg {
-  background-image: url(../images/about/01.webp);
+  background-image: url(../images/about/bjp-team.webp);
   height: 750px !important;
   background-size: cover;
   background-repeat: no-repeat;
@@ -17886,7 +17886,7 @@ li.has-dropdown:hover .submenu {
 
 .contact-page-banner {
   height: 450px !important;
-  background-image: url(../images/contact/02.webp);
+  background-image: url(../images/contact/bjp-contact.webp);
 }
 @media only screen and (max-width: 575px) {
   .contact-page-banner {

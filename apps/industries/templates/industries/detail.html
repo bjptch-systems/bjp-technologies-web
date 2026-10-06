@@ -38,7 +38,7 @@
             </div>
             <div class="col-lg-6 pl--30 pl_md--15 pl_sm--10 pt_md--30 pt_sm--30 wow fadeInUp" data-wow-offset="120" data-wow-delay=".5s">
                 <div class="thumbnail-top jarallax thumbnail-consultancy" data-jarallax='{"speed": 0.3}'>
-                    <img class="jarallax-img" src="{% static 'images/industry/11.webp' %}" alt="{{ industry.name }}">
+                    <img class="jarallax-img" src="{% static 'images/industry/bjp-industry-detail.webp' %}" alt="{{ industry.name }}">
                 </div>
             </div>
         </div>
@@ -53,9 +53,9 @@
                 <div class="col-lg-6 pr--40 pr_md--10 pr_sm--10 mb_md--30 mb_sm--25">
                     <div class="thumbnail-consultancy jarallax" data-jarallax='{"speed": 0.2}'>
                         {% if industry.image %}
-                        <img class="jarallax-img" src="{{ industry.image.url }}" alt="{{ industry.name }}">
+                        <img class="jarallax-img" src="{% static 'images/industry/'|add:industry.image %}" alt="{{ industry.name }}">
                         {% else %}
-                        <img class="jarallax-img" src="{% static 'images/industry/02.webp' %}" alt="{{ industry.name }}">
+                        <img class="jarallax-img" src="{% static 'images/industry/bjp-industry-detail.webp' %}" alt="{{ industry.name }}">
                         {% endif %}
                     </div>
                 </div>

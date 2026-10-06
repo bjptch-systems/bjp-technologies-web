@@ -20,6 +20,12 @@ class Service(BaseModel):
         default="",
         help_text="Filename from static/images/service/icons/ e.g. 22.svg",
     )
+    image = models.CharField(
+        max_length=80,
+        blank=True,
+        default="",
+        help_text="Filename from static/images/service/ e.g. bjp-cybersecurity.webp",
+    )
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
