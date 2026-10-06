@@ -7,6 +7,8 @@ from django.utils import timezone
 from django.views.generic import TemplateView
 from django.views.generic.edit import FormView
 
+from apps.core.models import SiteSettings
+
 from .forms import ContactForm
 from .models import ContactEnquiry
 
@@ -106,15 +108,16 @@ class ContactView(FormView):
     def _send_confirmation(self, enquiry: ContactEnquiry) -> None:
         preview = enquiry.message[:200] + ("..." if len(enquiry.message) > 200 else "")
         subject = "We received your message — BJP Technologies"
+        phone = SiteSettings.get().phone
         body = (
             f"Dear {enquiry.first_name},\n\n"
             f"Thank you for contacting BJP Technologies. We have received your enquiry "
             f"and will respond within 1–2 business days.\n\n"
             f'Your message:\n"{preview}"\n\n'
-            f"For urgent matters, please call us directly at +255 678 290 994.\n\n"
+            f"For urgent matters, please call us directly at {phone}.\n\n"
             f"Best regards,\n"
             f"BJP Technologies (T) Limited\n"
-            f"info@bjptechnologies.co.tz | +255 678 290 994\n"
+            f"info@bjptechnologies.co.tz | {phone}\n"
             f"Ubungo, Dar es Salaam, Tanzania"
         )
         email = EmailMessage(
