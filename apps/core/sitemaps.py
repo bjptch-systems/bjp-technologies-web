@@ -18,6 +18,7 @@ class StaticViewSitemap(Sitemap):
             "services:list",
             "industries:list",
             "contact:contact",
+            "main:privacy",
         ]
 
     def location(self, item):

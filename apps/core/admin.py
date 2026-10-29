@@ -19,6 +19,7 @@ from .models import (
     HeroSectionSettings,
     IndustriesPageSettings,
     LogoBrandingSettings,
+    PrivacyPolicySettings,
     ServicesPageSettings,
     SocialMediaSettings,
     StatsCountersSettings,
@@ -302,6 +303,23 @@ class AnalyticsSettingsAdmin(_SiteSettingsSectionAdmin):
                     "The GA4 tracking tag is injected on every public page when enabled. "
                     "It is suppressed automatically while DEBUG is on (local development), "
                     "so your own dev traffic never pollutes production statistics."
+                ),
+            },
+        ),
+    )
+
+
+@admin.register(PrivacyPolicySettings)
+class PrivacyPolicySettingsAdmin(_SiteSettingsSectionAdmin):
+    fieldsets = (
+        (
+            "Privacy Policy",
+            {
+                "fields": ("privacy_policy_updated", "privacy_policy_body"),
+                "description": (
+                    "Shown at /privacy-policy/ and linked from every page footer, the contact "
+                    "form and the cookie banner. Required by the Personal Data Protection "
+                    "Commission (PDPC). Update the date whenever you change the text."
                 ),
             },
         ),

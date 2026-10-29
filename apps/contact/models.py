@@ -29,6 +29,17 @@ class ContactEnquiry(BaseModel):
     message = models.TextField()
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=STATUS_NEW)
+    consent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="When the visitor ticked the privacy consent box. Blank for older enquiries.",
+    )
+    privacy_policy_version = models.CharField(
+        max_length=20,
+        blank=True,
+        default="",
+        help_text="'Last updated' date of the Privacy Policy the visitor agreed to.",
+    )
 
     class Meta:
         ordering = ["-created_at"]

@@ -11,6 +11,12 @@ class ContactForm(forms.ModelForm):
         required=False,
         empty_label="Select a service (optional)",
     )
+    consent = forms.BooleanField(
+        required=True,
+        error_messages={
+            "required": "Please tick this box so we can respond to your enquiry.",
+        },
+    )
 
     class Meta:
         model = ContactEnquiry

@@ -23,3 +23,9 @@ class AboutView(TemplateView):
         context = super().get_context_data(**kwargs)
         context["services"] = Service.objects.filter(is_active=True).order_by("order")
         return context
+
+
+class PrivacyPolicyView(TemplateView):
+    """Privacy Policy — text lives in SiteSettings (admin → Site Settings → Privacy Policy)."""
+
+    template_name = "main/privacy.html"

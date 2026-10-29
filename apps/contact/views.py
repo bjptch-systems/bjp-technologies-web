@@ -73,6 +73,8 @@ class ContactView(FormView):
 
         enquiry = form.save(commit=False)
         enquiry.ip_address = ip
+        enquiry.consent_at = timezone.now()
+        enquiry.privacy_policy_version = SiteSettings.get().privacy_policy_updated.isoformat()
         enquiry.save()
 
         self._send_notification(enquiry)
@@ -108,7 +110,8 @@ class ContactView(FormView):
     def _send_confirmation(self, enquiry: ContactEnquiry) -> None:
         preview = enquiry.message[:200] + ("..." if len(enquiry.message) > 200 else "")
         subject = "We received your message — BJP Technologies"
-        phone = SiteSettings.get().phone
+        company = SiteSettings.get()
+        phone = company.phone
         body = (
             f"Dear {enquiry.first_name},\n\n"
             f"Thank you for contacting BJP Technologies. We have received your enquiry "
@@ -118,7 +121,7 @@ class ContactView(FormView):
             f"Best regards,\n"
             f"BJP Technologies (T) Limited\n"
             f"info@bjptechnologies.co.tz | {phone}\n"
-            f"Ubungo, Dar es Salaam, Tanzania"
+            f"{company.address}"
         )
         email = EmailMessage(
             subject=subject,

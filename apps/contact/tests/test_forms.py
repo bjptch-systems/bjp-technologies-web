@@ -18,6 +18,7 @@ def valid_data(service=None):
         "company": "MyBiz Ltd",
         "service": service.pk if service else "",
         "message": "I need help with our payroll system.",
+        "consent": "on",
     }
 
 
@@ -37,6 +38,7 @@ def test_valid_without_optional_fields(db):
         "company": "",
         "service": "",
         "message": "A simple enquiry about services.",
+        "consent": "on",
     }
     form = ContactForm(data=data)
     assert form.is_valid(), form.errors
@@ -111,3 +113,12 @@ def test_service_optional(db):
     form = ContactForm(data=data)
     assert form.is_valid(), form.errors
     assert form.cleaned_data["service"] is None
+
+
+@pytest.mark.django_db
+def test_consent_required(service):
+    data = valid_data(service)
+    del data["consent"]
+    form = ContactForm(data=data)
+    assert not form.is_valid()
+    assert form.errors["consent"] == ["Please tick this box so we can respond to your enquiry."]
