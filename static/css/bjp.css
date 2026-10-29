@@ -63,3 +63,216 @@
 .progress-wrap svg path {
   stroke: #00C6FF;
 }
+
+/* ══ Privacy & consent (PDPC compliance) ══════════════════════════════ */
+
+/* ── Cookie banner ── */
+.cookie-banner {
+  position: fixed;
+  left: 16px;
+  right: 16px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+}
+.cookie-banner[hidden] {
+  display: none;
+}
+.cookie-banner-inner {
+  max-width: 1100px;
+  width: 100%;
+  background: var(--navy);
+  color: var(--white);
+  border-radius: 10px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 10px 30px rgba(8, 15, 46, 0.35);
+}
+.cookie-banner-inner p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.9);
+}
+.cookie-banner-inner a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.cookie-banner-actions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.cookie-btn {
+  font-family: "Outfit", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 10px 22px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.cookie-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.cookie-btn-accept {
+  background: var(--blue);
+  color: var(--white);
+}
+.cookie-btn-accept:hover {
+  background: var(--blue-light);
+}
+.cookie-btn-reject {
+  background: transparent;
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+.cookie-btn-reject:hover {
+  border-color: var(--white);
+}
+@media (max-width: 767px) {
+  .cookie-banner-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 16px;
+  }
+  .cookie-banner-actions .cookie-btn {
+    flex: 1;
+  }
+}
+
+/* ── Footer legal links ── */
+.footer-legal-links {
+  display: inline-flex;
+  gap: 18px;
+  margin-left: 18px;
+}
+.footer-legal-links a {
+  color: inherit;
+  text-decoration: underline;
+}
+@media (max-width: 575px) {
+  .footer-legal-links {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0 0;
+  }
+}
+
+/* ── Privacy Policy page ── */
+.privacy-banner {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+  padding: 170px 0 60px;
+}
+.privacy-updated {
+  color: rgba(255, 255, 255, 0.75);
+  margin: 12px 0 0;
+}
+.privacy-policy {
+  color: var(--text-body);
+  font-size: 16px;
+  line-height: 1.7;
+}
+.privacy-policy h2 {
+  font-family: "DM Serif Display", serif;
+  font-weight: 400;
+  color: var(--navy);
+  font-size: 26px;
+  margin: 40px 0 12px;
+}
+.privacy-policy p,
+.privacy-policy ul {
+  margin-bottom: 14px;
+}
+.privacy-policy ul {
+  padding-left: 22px;
+}
+.privacy-policy li {
+  margin-bottom: 6px;
+  list-style: disc;
+}
+.privacy-policy a {
+  color: var(--blue);
+}
+.privacy-table {
+  overflow-x: auto;
+  margin-bottom: 14px;
+}
+.privacy-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.privacy-table th,
+.privacy-table td {
+  text-align: left;
+  vertical-align: top;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--grey-light);
+}
+.privacy-table th {
+  color: var(--navy);
+  font-weight: 600;
+  background: var(--off-white);
+}
+
+/* ── Contact form consent ── */
+.contact-consent-label {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--navy);
+  cursor: pointer;
+}
+.contact-consent-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  margin-top: 3px;
+  padding: 0;
+  accent-color: var(--blue);
+}
+.contact-consent-label a {
+  color: var(--blue);
+  text-decoration: underline;
+}
+.contact-consent-error {
+  display: block;
+  color: #e53935;
+  font-size: 13px;
+  margin-top: 6px;
+  padding-left: 30px;
+}
+
+/* ── Map placeholder (before cookie consent) ── */
+.map-consent-placeholder {
+  min-height: 420px;
+  background: var(--off-white);
+  border: 1px solid var(--grey-light);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 24px;
+}
+.map-consent-placeholder[hidden] {
+  display: none;
+}
+.map-consent-placeholder p {
+  color: var(--text-body);
+  margin: 0 0 14px;
+}
+.map-consent-placeholder .map-consent-alt {
+  margin: 14px 0 0;
+  font-size: 14px;
+}
+.map-consent-placeholder .map-consent-alt a {
+  color: var(--blue);
+}

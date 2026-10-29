@@ -38,10 +38,15 @@ def test_tag_not_rendered_in_debug(client, settings_with_ga):
 
 @pytest.mark.django_db
 @PROD_LIKE
-def test_tag_rendered_when_enabled(client, settings_with_ga):
+def test_tag_queued_when_enabled(client, settings_with_ga):
+    """GA config is queued, but gtag.js itself only loads after cookie consent
+    (static/js/consent.js) — it must never be in the page source."""
     html = client.get(HOME_URL).content.decode()
-    assert "googletagmanager.com/gtag/js?id=G-C9L66H4VE4" in html
+    # escapejs encodes "-" as \u002D, which JS reads back as G-C9L66H4VE4.
+    assert "window.BJP_GA_ID = 'G\\u002DC9L66H4VE4'" in html
     assert "gtag('config', 'G-C9L66H4VE4')" in html
+    assert "googletagmanager.com/gtag/js" not in html
+    assert "js/consent.js" in html
 
 
 @pytest.mark.django_db

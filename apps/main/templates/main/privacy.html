@@ -1,0 +1,41 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Privacy Policy — BJP Technologies (T) Limited{% endblock %}
+{% block meta_description %}How BJP Technologies collects, uses and protects personal information on bjptechnologies.co.tz, and the choices and rights you have under Tanzania's Personal Data Protection Act.{% endblock %}
+{% block og_title %}Privacy Policy — BJP Technologies (T) Limited{% endblock %}
+{% block og_description %}How BJP Technologies collects, uses and protects your personal information.{% endblock %}
+{% block og_url %}/privacy-policy/{% endblock %}
+
+{% block content %}
+
+<!-- Page Banner -->
+<div class="privacy-banner">
+    <div class="container">
+        <div class="bread-plug" style="margin-bottom:16px;">
+            <a href="{% url 'main:home' %}" style="color:var(--accent); text-decoration:none;">Home</a>
+            <i class="fa-regular fa-chevron-right" style="color:var(--grey); margin:0 8px; font-size:11px;"></i>
+            <span style="color:var(--white);">Privacy Policy</span>
+        </div>
+        <h1 style="font-family:'DM Serif Display', serif; color:var(--white); font-size:clamp(2rem,5vw,3.2rem); margin:0;">
+            Privacy Policy
+        </h1>
+        <p class="privacy-updated">Last updated: {{ company.privacy_policy_updated|date:"j F Y" }}</p>
+    </div>
+</div>
+
+<!-- Policy -->
+<div class="rts-section-gap">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <article class="privacy-policy">
+                    {# Admin-only content (Site Settings → Privacy Policy) — trusted HTML. #}
+                    {{ company.privacy_policy_body|safe }}
+                </article>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

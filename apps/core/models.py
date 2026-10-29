@@ -1,7 +1,9 @@
 import uuid
+from datetime import date
 
 from django.db import models
 
+from .privacy_policy import default_privacy_policy
 from .validators import validate_favicon_file, validate_logo_file
 
 
@@ -21,7 +23,9 @@ class SiteSettings(models.Model):
     tagline = models.CharField(max_length=200, default="Secure Technology. Scalable Growth.")
     email = models.EmailField(default="info@bjptechnologies.co.tz")
     phone = models.CharField(max_length=30, default="+255 764 764 011")
-    address = models.CharField(max_length=200, default="Ubungo – Dar es Salaam, Tanzania")
+    address = models.CharField(
+        max_length=200, default="Msakuzi, Ubungo, Dar es Salaam, 16113, Tanzania"
+    )
     postal = models.CharField(max_length=100, default="P.O Box 7276, Msakuzi – Mbezi")
     domain = models.CharField(max_length=100, default="bjptechnologies.co.tz")
 
@@ -172,6 +176,22 @@ class SiteSettings(models.Model):
         ),
     )
 
+    # Privacy Policy (PDPC compliance)
+    privacy_policy_body = models.TextField(
+        default=default_privacy_policy,
+        help_text=(
+            "Full policy text in HTML (headings, paragraphs, lists, tables). Only trusted "
+            "staff should edit this — it is rendered on the page as-is."
+        ),
+    )
+    privacy_policy_updated = models.DateField(
+        default=date.today,
+        help_text=(
+            "Shown as 'Last updated' on the policy page and recorded with every contact "
+            "enquiry's consent. Change it whenever the policy text changes."
+        ),
+    )
+
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -280,3 +300,10 @@ class AnalyticsSettings(SiteSettings):
         proxy = True
         verbose_name = "Google Analytics"
         verbose_name_plural = "Google Analytics"
+
+
+class PrivacyPolicySettings(SiteSettings):
+    class Meta:
+        proxy = True
+        verbose_name = "Privacy Policy"
+        verbose_name_plural = "Privacy Policy"
