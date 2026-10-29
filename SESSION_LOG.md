@@ -1528,3 +1528,66 @@ Confirmed the map URL itself was fine — the live page served a valid populated
 - [ ] Remaining Phase 6 items (page speed, image optimization, final audit)
 
 ---
+
+---
+
+## Session 22 — 2026-10-29 13:00 EAT
+
+**Goal:** Fix the PDPC Tanzania compliance failures (no privacy policy, no consent form) reported on 15 Oct 2026, and add a cookie banner.
+**Branch:** feature/pdpc-privacy-compliance
+**Status:** ✅ Complete
+
+### What Was Done
+- Reviewed PDPC Domain Compliance Report for bjptechnologies.co.tz (15 Oct 2026, expires 15 Jan 2027): SSL pass; Privacy Policy and Consent Form fail; "Domain Not Complied"
+- Drafted the Privacy Policy from what the site actually collects (contact form, IP, GA4, Google Maps, Google Fonts); previewed and approved by the developer, with contact details supplied by BJP
+- Privacy Policy page at `/privacy-policy/` (`main:privacy`), text and "Last updated" date editable in admin (Site Settings → Privacy Policy); added to sitemap
+- Contact form: required unticked consent checkbox; each enquiry stores `consent_at` and `privacy_policy_version`; shown read-only in admin
+- Cookie banner (`core/cookie_banner.html` + `static/js/consent.js`): GA4 gtag.js and the Google Maps iframe load only after "Accept"; "Reject" loads nothing from Google; "Cookie settings" footer link reopens it; map shows a "Show map" placeholder until consent
+- Company address updated to "Msakuzi, Ubungo, Dar es Salaam, 16113, Tanzania" (footer, contact page, confirmation email)
+- Recreated the local venv: the OS upgrade replaced system Python 3.12 with 3.14, breaking the old venv (moved to `venv.old-py312/`, excluded locally via `.git/info/exclude`)
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| apps/core/privacy_policy.py | Created | Default policy HTML |
+| apps/core/models.py | Modified | `privacy_policy_body`, `privacy_policy_updated`, new address default, `PrivacyPolicySettings` proxy |
+| apps/core/admin.py, config/settings/base.py | Modified | Privacy Policy admin section + sidebar link |
+| apps/core/migrations/0010_privacy_policy_and_address.py | Created | Fields + address data update (old default only) |
+| apps/contact/models.py, admin.py, forms.py, views.py | Modified | Consent fields, required checkbox, recorded on save; address in confirmation email |
+| apps/contact/migrations/0002_enquiry_consent.py | Created | `consent_at`, `privacy_policy_version` |
+| apps/contact/templates/contact/contact.html | Modified | Consent checkbox; map gated behind consent |
+| apps/main/views.py, urls.py, templates/main/privacy.html | Modified/Created | Privacy Policy page |
+| apps/core/templates/core/base.html, footer.html, cookie_banner.html | Modified/Created | GA queued only; banner; footer legal links |
+| apps/core/sitemaps.py | Modified | `main:privacy` |
+| static/js/consent.js, static/css/bjp.css | Created/Modified | Consent logic + styles (brand variables) |
+| apps/main/tests/test_privacy.py, apps/contact/tests/*, apps/core/tests/test_analytics.py | Created/Modified | 13 new tests; existing form posts include consent |
+
+### Migrations
+- `core.0010_privacy_policy_and_address`, `contact.0002_enquiry_consent`
+- Applied: ✅ Yes (local); production applies via CI/CD deploy
+
+### Tests
+- Tests written: 13
+- Tests passing: 176 / 176
+- Coverage areas: privacy page, sitemap, banner/footer, form consent, consent recording, map gating, GA not loaded before consent
+
+### Decisions Made
+- Decision: Block Google scripts entirely until consent instead of Google Consent Mode.
+  Reason: Stricter and simpler; nothing reaches Google before "Accept".
+- Decision: Policy text stored as admin-editable HTML seeded from code.
+  Reason: BJP can update it without a developer; the "Last updated" date is saved with each enquiry's consent as proof.
+- Decision: Policy "Last updated" defaults to the migration date.
+  Reason: Production gets its go-live date automatically.
+
+### Blockers / Issues
+- Pre-existing bug (not fixed here): the contact form's service dropdown has `url(\"…\")` inside its inline style, causing a 404 request for a junk URL and a missing arrow icon.
+- `black .` scans `venv.old-py312/`; run `black --check --extend-exclude 'venv\.old-py312' .` or delete that folder once the new venv is confirmed.
+
+### Next Session Should
+- [ ] BJP to create and monitor privacy@bjptechnologies.co.tz before go-live
+- [ ] After deploy to main: check the banner, policy and contact form on production, then request PDPC re-verification (before 15 Jan 2027)
+- [ ] Confirm BJP is registered with PDPC as a data controller
+- [ ] Fix the contact dropdown inline-style 404
+- [ ] Delete `venv.old-py312/` once the new venv is confirmed
+
+---

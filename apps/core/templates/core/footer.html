@@ -89,7 +89,12 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="copyright-wrapper">
-                        <p>© {% now "Y" %} {{ company.name }}. All rights reserved.</p>
+                        <p>© {% now "Y" %} {{ company.name }}. All rights reserved.
+                            <span class="footer-legal-links">
+                                <a href="{% url 'main:privacy' %}">Privacy Policy</a>
+                                <a href="#" data-cookie-settings>Cookie settings</a>
+                            </span>
+                        </p>
                         <div class="social-copyright-area">
                             <ul>
                                 {% if company.facebook_url %}

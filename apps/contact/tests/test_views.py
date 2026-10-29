@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 from unittest.mock import patch
 
@@ -26,6 +27,7 @@ def post_data(service=None):
         "company": "Acme Ltd",
         "service": service.pk if service else "",
         "message": "We are looking for a cloud partner in Tanzania.",
+        "consent": "on",
     }
 
 
@@ -178,3 +180,51 @@ def test_success_page_shows_company_phone(client):
     response = client.get(SUCCESS_URL)
     assert "+255 764 764 011" in response.content.decode()
     assert 'href="tel:+255764764011"' in response.content.decode()
+
+
+# --- Privacy consent ---
+
+
+@pytest.mark.django_db
+def test_post_without_consent_is_rejected(client, service):
+    data = post_data(service)
+    del data["consent"]
+    response = client.post(CONTACT_URL, data)
+    assert response.status_code == 200
+    assert "consent" in response.context["form"].errors
+    assert ContactEnquiry.objects.count() == 0
+
+
+@pytest.mark.django_db
+def test_post_records_consent_time_and_policy_version(client, service):
+    from apps.core.models import SiteSettings
+
+    with patch("apps.contact.views.ContactView._send_notification"):
+        with patch("apps.contact.views.ContactView._send_confirmation"):
+            client.post(CONTACT_URL, post_data(service))
+    enquiry = ContactEnquiry.objects.get()
+    assert enquiry.consent_at is not None
+    assert enquiry.privacy_policy_version == SiteSettings.get().privacy_policy_updated.isoformat()
+
+
+@pytest.mark.django_db
+def test_contact_page_has_consent_checkbox_and_policy_link(client):
+    html = client.get(CONTACT_URL).content.decode()
+    assert 'name="consent"' in html
+    assert reverse("main:privacy") in html
+
+
+@pytest.mark.django_db
+def test_map_does_not_load_before_consent(client):
+    html = client.get(CONTACT_URL).content.decode()
+    assert "data-consent-src=" in html
+    # Only data-consent-src may carry the Google URL; a bare src= would load it.
+    assert not re.search(r'(?<!-)src="https://www\.google\.com/maps', html)
+    assert "data-map-placeholder" in html
+
+
+@pytest.mark.django_db
+def test_confirmation_email_uses_company_address(client, service, mailoutbox):
+    client.post(CONTACT_URL, post_data(service))
+    confirmation = next(m for m in mailoutbox if m.to == ["zawadi@example.com"])
+    assert "Msakuzi, Ubungo, Dar es Salaam, 16113, Tanzania" in confirmation.body

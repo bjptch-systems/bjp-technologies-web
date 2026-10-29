@@ -278,6 +278,11 @@ UNFOLD = {
                         "icon": "campaign",
                         "link": reverse_lazy("admin:core_footerctasettings_changelist"),
                     },
+                    {
+                        "title": "Privacy Policy",
+                        "icon": "policy",
+                        "link": reverse_lazy("admin:core_privacypolicysettings_changelist"),
+                    },
                 ],
             },
             {

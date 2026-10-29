@@ -35,6 +35,8 @@ class ContactEnquiryAdmin(ModelAdmin):
         "service",
         "message",
         "ip_address",
+        "consent_at",
+        "privacy_policy_version",
         "created_at",
         "updated_at",
     ]
@@ -58,6 +60,10 @@ class ContactEnquiryAdmin(ModelAdmin):
         (
             "Status",
             {"fields": ["status"]},
+        ),
+        (
+            "Privacy Consent",
+            {"fields": [("consent_at", "privacy_policy_version")]},
         ),
         (
             "Meta",

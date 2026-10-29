@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     {% if analytics_enabled %}
-    <!-- Google tag (gtag.js) — GA4 -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ company.ga_measurement_id }}"></script>
+    <!-- Google tag (GA4) — queued only. gtag.js loads after cookie consent (static/js/consent.js) -->
     <script>
+      window.BJP_GA_ID = '{{ company.ga_measurement_id|escapejs }}';
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
@@ -64,6 +64,7 @@
 {% block content %}{% endblock %}
 
 {% include 'core/footer.html' %}
+{% include 'core/cookie_banner.html' %}
 
 <!-- Pre-loader -->
 <div class="loader-wrapper">
@@ -140,6 +141,7 @@
 <script defer src="{% static 'js/vendor/contact-form.js' %}"></script>
 <script defer src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
 <script defer src="{% static 'js/main.js' %}"></script>
+<script defer src="{% static 'js/consent.js' %}"></script>
 
 {% block extra_js %}{% endblock %}
 
