@@ -1,5 +1,6 @@
 """Release 1 (Nov 2026) — business details for Google, one canonical host, contact info."""
 
+import importlib
 import json
 import re
 
@@ -80,8 +81,11 @@ def test_main_domain_is_served_normally():
     assert middleware(request).status_code == 200
 
 
-def test_www_middleware_runs_first_in_production():
-    from config.settings import production
+def test_www_middleware_runs_first_in_production(monkeypatch):
+    # production.py reads ALLOWED_HOSTS from the environment at import time; CI has no
+    # .env, so supply it here rather than depend on the machine running the tests.
+    monkeypatch.setenv("ALLOWED_HOSTS", "bjptechnologies.co.tz,www.bjptechnologies.co.tz")
+    production = importlib.import_module("config.settings.production")
 
     assert production.MIDDLEWARE[0] == "apps.core.middleware.StripWwwMiddleware"
 
