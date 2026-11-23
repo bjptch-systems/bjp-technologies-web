@@ -1,11 +1,13 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load static seo_tags %}
 
 {% block title %}BJP Technologies (T) Limited{% endblock %}
-{% block meta_description %}BJP Technologies — Tanzania's leading IT solutions company. Software development, cybersecurity, cloud infrastructure, payment integrations and managed IT services in Dar es Salaam.{% endblock %}
+{% block meta_description %}BJP Technologies is an IT company in Msakuzi, Ubungo, Dar es Salaam. Custom software, websites, bulk SMS, mobile money and payment integrations, managed IT support, and business software including Smart POS, Smart BMS, PMS and Vikundi.{% endblock %}
 {% block og_title %}BJP Technologies (T) Limited — Secure Technology. Scalable Growth.{% endblock %}
-{% block og_description %}Tanzania's leading IT solutions company delivering software development, cybersecurity, cloud infrastructure, and payment integrations across East Africa.{% endblock %}
+{% block og_description %}IT company in Dar es Salaam building custom software, websites, bulk SMS and payment integrations for businesses across Tanzania.{% endblock %}
 {% block og_url %}/{% endblock %}
+
+{% block structured_data %}{% business_jsonld %}{% endblock %}
 
 {% block content %}
 
@@ -238,7 +240,7 @@
                         </li>
                         <li class="mb--12">
                             <i class="fa-sharp fa-regular fa-check" style="color:#00C6FF; margin-right:10px;"></i>
-                            Enterprise-grade cybersecurity (WAF, VAPT, server hardening)
+                            Bulk SMS with your business name as the sender
                         </li>
                     </ul>
                     <a href="{% url 'main:about' %}" class="rts-btn btn-primary btn-bold">
@@ -301,12 +303,12 @@
             </div>
             <div class="col-lg-6 wow fadeInUp" data-wow-offset="120" data-wow-delay=".5s">
                 <div class="single-working-process-choose-us">
-                    <h4 class="title">Enterprise Security Standard</h4>
-                    <p>We apply enterprise-grade security to every project — WAF (ModSecurity), vulnerability assessments, server hardening, and secure authentication flows. Security is never an optional add-on.</p>
+                    <h4 class="title">Bulk SMS That Reaches People</h4>
+                    <p>Send alerts, reminders and promotions to thousands of customers at once — with your business name as the sender, or straight from your own system through our SMS API.</p>
                     <div class="tag-wrapper">
-                        <span class="single">WAF / ModSecurity</span>
-                        <span class="single">VAPT</span>
-                        <span class="single">Server Hardening</span>
+                        <span class="single">Sender ID</span>
+                        <span class="single">Bulk Campaigns</span>
+                        <span class="single">SMS API</span>
                     </div>
                 </div>
             </div>

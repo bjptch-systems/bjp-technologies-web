@@ -18,7 +18,7 @@ class Service(BaseModel):
         max_length=60,
         blank=True,
         default="",
-        help_text="Filename from static/images/service/icons/ e.g. 22.svg",
+        help_text="Font Awesome icon class, e.g. fa-regular fa-laptop-code",
     )
     image = models.CharField(
         max_length=80,

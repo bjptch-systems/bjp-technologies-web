@@ -78,3 +78,11 @@ class TestIndustryDetailView:
         content = response.content.decode()
         assert "images/industry/bjp-industry-detail.webp" in content
         assert "images/industry/02.webp" not in content
+
+    def test_detail_solutions_show_bulk_sms_not_paused_services(self, client, industry):
+        html = client.get(
+            reverse("industries:detail", kwargs={"slug": industry.slug})
+        ).content.decode()
+        assert "Bulk SMS" in html
+        assert "Cybersecurity" not in html
+        assert "Cloud Infrastructure" not in html

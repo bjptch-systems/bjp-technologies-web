@@ -414,6 +414,23 @@ def render(name, W, H, glyph, cx=0.5, cy=0.5, scale=0.28, glow=None, seed=1, rin
     return path
 
 
+def g_sms(p):
+    """Bulk SMS: one phone sending the same message to many recipients."""
+    p.rect(-0.95, -0.75, -0.35, 0.75, fill=FILL, r=0.1)
+    p.line([(-0.75, -0.62), (-0.55, -0.62)], a=170, k=0.7)
+    p.rect(-0.85, -0.4, -0.45, -0.05, col=BLUEL, fill=FILL2, r=0.05)
+    p.line([(-0.78, -0.27), (-0.52, -0.27)], a=200, k=0.7)
+    p.line([(-0.78, -0.16), (-0.6, -0.16)], a=200, k=0.7)
+    p.circle(-0.65, 0.6, 0.05, a=170, k=0.6)
+    for y in (-0.6, 0.0, 0.6):
+        p.line([(-0.3, 0.0), (0.05, y)], a=110, k=0.7)
+        p.rect(0.1, y - 0.2, 0.95, y + 0.2, col=BLUEL, fill=FILL2, r=0.12)
+        p.poly([(0.22, y + 0.2), (0.17, y + 0.33), (0.36, y + 0.2)], col=BLUEL, fill=FILL2)
+        p.line([(0.25, y - 0.04), (0.8, y - 0.04)], a=180, k=0.7)
+        p.line([(0.25, y + 0.08), (0.62, y + 0.08)], a=150, k=0.7)
+    p.dot(-0.3, 0.0, 0.06)
+
+
 SERVICES = {
     "software-development": g_code,
     "website-digital-solutions": g_web,
@@ -422,6 +439,7 @@ SERVICES = {
     "managed-it-services": g_monitor,
     "payment-system-integrations": g_payment,
     "it-consulting-advisory": g_consult,
+    "bulk-sms": g_sms,
 }
 INDUSTRIES = {
     "startups-smes": g_rocket,

@@ -8,7 +8,7 @@
                         {% if company.logo %}
                             <img src="{{ company.logo.url }}" alt="{{ company.name }}" style="height:40px; width:auto; filter: brightness(0) invert(1);">
                         {% else %}
-                            <img src="{% static 'images/logo/bjp-logo-horizontal-light.png' %}" alt="BJP Technologies (T) Limited" style="height:40px; width:auto;">
+                            <img src="{% static 'images/logo/bjp-logo-horizontal-light.svg' %}" alt="BJP Technologies (T) Limited" style="height:40px; width:auto;">
                         {% endif %}
                     </a>
                     <div class="nav-area">
@@ -32,13 +32,9 @@
                                         <i class="fa-duotone fa-regular fa-chevron-down"></i>
                                     </a>
                                     <ul class="submenu parent-nav with-border">
-                                        <li><a href="{% url 'services:detail' slug='software-development' %}"><i class="fa-sharp fa-regular fa-chevron-right"></i> Software Development</a></li>
-                                        <li><a href="{% url 'services:detail' slug='website-digital-solutions' %}"><i class="fa-sharp fa-regular fa-chevron-right"></i> Website &amp; Digital</a></li>
-                                        <li><a href="{% url 'services:detail' slug='cloud-infrastructure' %}"><i class="fa-sharp fa-regular fa-chevron-right"></i> Cloud &amp; Infrastructure</a></li>
-                                        <li><a href="{% url 'services:detail' slug='cybersecurity' %}"><i class="fa-sharp fa-regular fa-chevron-right"></i> Cybersecurity</a></li>
-                                        <li><a href="{% url 'services:detail' slug='managed-it-services' %}"><i class="fa-sharp fa-regular fa-chevron-right"></i> Managed IT Services</a></li>
-                                        <li><a href="{% url 'services:detail' slug='payment-system-integrations' %}"><i class="fa-sharp fa-regular fa-chevron-right"></i> Payment Integrations</a></li>
-                                        <li><a href="{% url 'services:detail' slug='it-consulting-advisory' %}"><i class="fa-sharp fa-regular fa-chevron-right"></i> IT Consulting</a></li>
+                                        {% for svc in footer_services %}
+                                        <li><a href="{% url 'services:detail' slug=svc.slug %}"><i class="fa-sharp fa-regular fa-chevron-right"></i> {{ svc.name }}</a></li>
+                                        {% endfor %}
                                     </ul>
                                 </li>
                                 <li>
