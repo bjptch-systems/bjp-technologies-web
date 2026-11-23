@@ -1722,3 +1722,51 @@ Confirmed the map URL itself was fine — the live page served a valid populated
 - [ ] Real product screenshots when BJP has them
 
 ---
+
+---
+
+## Session 25 — 2026-11-24 12:30 EAT
+
+**Goal:** Redesign the home page "Our Products" section as an interactive showcase.
+**Branch:** feature/home-products-showcase
+**Status:** ✅ Complete (preview approved by the developer)
+
+### What Was Done
+- Release 2 verified live: four products on home and /products/, Smart POS and Smart BMS pages, Retail callout, `Cache-Control: no-cache, private` on HTML
+- Replaced the four stacked product cards with a tabbed showcase (`main/_products_showcase.html`): product tabs on the left, selected product (image, tagline, byline, top 4 features, Explore + primary CTA) on the right, per-product accent colour
+- Accessible tabs (`static/js/products-showcase.js`): roles/aria, arrow keys, Home/End; without JavaScript all products stack
+- Tablet/phone: tabs become a swipeable row, panel stacks
+- `Product.icon` field (admin) + data migration; `Product.short_name` property
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| apps/main/templates/main/_products_showcase.html | Created | Showcase partial |
+| apps/main/templates/main/home.html | Modified | Old strip replaced by include + script |
+| static/js/products-showcase.js | Created | Tab behaviour |
+| static/css/bjp.css | Modified | `.ps-*` styles |
+| apps/products/models.py, admin.py, migrations/0008_product_icon.py | Modified/Created | icon field, short_name |
+| apps/main/tests/test_views.py | Modified | 2 tests |
+
+### Migrations
+- `products.0008_product_icon`
+- Applied: ✅ Yes (local); production via CI/CD
+
+### Tests
+- Tests written: 2
+- Tests passing: 210 / 210
+- Coverage areas: showcase renders every live product, short names
+
+### Decisions Made
+- Decision: Tabs with progressive enhancement rather than a carousel.
+  Reason: All products reachable by keyboard and screen readers; nothing hidden without JS.
+- Decision: Vikundi icon `fa-users` (not `fa-people-group`).
+  Reason: people-group does not render in the site's Font Awesome build.
+
+### Blockers / Issues
+- Developer saw "three products" on the home page — most likely a copy cached before Release 2 (no-cache fix shipped in Release 2). The three-box row below the products section lists services, not products.
+
+### Next Session Should
+- [ ] After deploy: check the showcase live on desktop and phone
+
+---
