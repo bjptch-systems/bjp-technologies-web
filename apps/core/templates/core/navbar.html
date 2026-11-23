@@ -6,7 +6,7 @@
                 <div class="header-four-wrapper">
                     <a href="{% url 'main:home' %}" class="logo">
                         {% if company.logo %}
-                            <img src="{{ company.logo.url }}" alt="{{ company.name }}" style="height:40px; width:auto; filter: brightness(0) invert(1);">
+                            <img src="{{ company.logo.url }}" alt="{{ company.name }}" style="height:40px; width:auto;">
                         {% else %}
                             <img src="{% static 'images/logo/bjp-logo-horizontal-light.svg' %}" alt="BJP Technologies (T) Limited" style="height:40px; width:auto;">
                         {% endif %}

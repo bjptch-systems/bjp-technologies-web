@@ -31,7 +31,7 @@
                     <div class="logo-area">
                         <a href="{% url 'main:home' %}" class="logo">
                             {% if company.logo %}
-                                <img src="{{ company.logo.url }}" alt="{{ company.name }}" style="filter: brightness(0) invert(1); max-height:50px; width:auto;">
+                                <img src="{{ company.logo.url }}" alt="{{ company.name }}" style="max-height:50px; width:auto;">
                             {% else %}
                                 <img src="{% static 'images/logo/bjp-logo-horizontal-dark.svg' %}" alt="{{ company.name }}">
                             {% endif %}

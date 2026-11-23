@@ -41,9 +41,9 @@ class IndustryAdmin(ModelAdmin):
             },
         ),
         (
-            "Image",
+            "Image & Featured Product",
             {
-                "fields": ("image",),
+                "fields": ("image", "featured_product"),
                 "classes": ("collapse",),
             },
         ),

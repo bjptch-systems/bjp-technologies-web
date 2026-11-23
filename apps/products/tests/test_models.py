@@ -1,3 +1,5 @@
+import re
+
 import pytest
 
 from apps.products.models import Product
@@ -135,11 +137,20 @@ class TestBMSSeed:
         bms = Product.objects.get(slug="bms")
         assert bms.is_live
 
-    def test_bms_has_9_features(self):
-        """After migration 0006 the Loans / Microfinance entry is dropped —
-        BMS doesn't actually ship it. Vikundi keeps its own loans module."""
+    def test_bms_is_now_smart_bms(self):
+        """Release 2 (Nov 2026): renamed and rewritten from bms.bjptechnologies.co.tz."""
         bms = Product.objects.get(slug="bms")
-        assert len(bms.features) == 9
+        assert bms.name == "Smart BMS"
+        assert len(bms.features) == 8
+        assert bms.screenshots == []  # no mock-ups shown as the real product
+
+    def test_bms_drops_claims_the_product_site_does_not_make(self):
+        bms = Product.objects.get(slug="bms")
+        text = " ".join(
+            [bms.short_description, bms.long_description, bms.differentiators, str(bms.features)]
+        ).lower()
+        for claim in ("mobile money", "mobile-money", "vat", "tin", "low-stock", "reorder"):
+            assert not re.search(rf"\b{claim}\b", text), claim
 
     def test_bms_does_not_advertise_loans_feature(self):
         bms = Product.objects.get(slug="bms")
@@ -153,13 +164,13 @@ class TestBMSSeed:
             assert icon.startswith("fa-"), f"Expected fa-* icon, got: {icon!r}"
             assert "bi-" not in icon, f"Leftover bi-* class: {icon!r}"
 
-    def test_bms_cta_routes_to_internal_contact_form(self):
-        """Per user direction the live BMS URL is hidden — the demo CTA must
-        route to /contact/ with a product hint, not to the live product."""
+    def test_bms_ctas_go_to_the_product_site(self):
+        """Nov 2026 decision (replaces the earlier 'hide the live URL' rule): the
+        product site is public, so the buttons start a trial and show prices there."""
         bms = Product.objects.get(slug="bms")
-        assert bms.cta_primary_url == "/contact/?product=bms"
-        assert "bjptechnologies.co.tz" not in bms.cta_primary_url
-        assert bms.cta_secondary_url == ""
+        assert bms.cta_primary_label == "Start free trial"
+        assert bms.cta_primary_url == "https://bms.bjptechnologies.co.tz/register?product=bms_full"
+        assert bms.cta_secondary_url == "https://bms.bjptechnologies.co.tz/pricing"
 
     def test_bms_uses_company_support_email(self):
         bms = Product.objects.get(slug="bms")
@@ -215,4 +226,31 @@ class TestProductsOrdering:
             .order_by("order")
             .values_list("slug", flat=True)
         )
-        assert slugs == ["pms", "bms", "vikundi"]
+        assert slugs == ["pms", "smart-pos", "bms", "vikundi"]
+
+
+@pytest.mark.django_db
+class TestSmartPOSSeed:
+    def test_smart_pos_is_live_with_retail_and_restaurant_features(self):
+        pos = Product.objects.get(slug="smart-pos")
+        assert pos.is_live
+        names = [f["name"] for f in pos.features]
+        assert "Sell by weight or volume" in names
+        assert "Kitchen screen" in names
+        assert "QR menu at the table" in names
+        assert pos.screenshots == []
+
+    def test_smart_pos_ctas_go_to_the_product_site(self):
+        pos = Product.objects.get(slug="smart-pos")
+        assert pos.cta_primary_url == "https://bms.bjptechnologies.co.tz/register?product=bms_shop"
+        assert pos.cta_secondary_url == "https://bms.bjptechnologies.co.tz/pricing"
+
+    def test_smart_pos_assets_exist(self):
+        from pathlib import Path
+
+        from django.conf import settings
+
+        pos = Product.objects.get(slug="smart-pos")
+        bms = Product.objects.get(slug="bms")
+        for rel in (pos.hero_image, pos.logo_image, bms.hero_image, bms.logo_image):
+            assert (Path(settings.BASE_DIR) / "static" / "images" / rel).exists(), rel

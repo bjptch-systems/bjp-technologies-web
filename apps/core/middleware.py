@@ -1,4 +1,5 @@
 from django.http import HttpResponsePermanentRedirect
+from django.utils.cache import patch_cache_control
 
 
 class ContentSecurityPolicyMiddleware:
@@ -51,3 +52,24 @@ class StripWwwMiddleware:
         if host.startswith("www."):
             return HttpResponsePermanentRedirect(f"https://{host[4:]}{request.get_full_path()}")
         return self.get_response(request)
+
+
+class NoCacheHTMLMiddleware:
+    """Tell the server and browsers not to keep stored copies of HTML pages.
+
+    The host's NGINX cached whole pages, so admin changes (a cleared logo, new text) kept
+    showing old versions for a while. ``private`` keeps shared caches out; ``no-cache``
+    makes browsers check back each time. Static files are untouched — they keep their own
+    caching. Pages that already set Cache-Control (admin, etc.) are left alone.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if "Cache-Control" not in response and response.get("Content-Type", "").startswith(
+            "text/html"
+        ):
+            patch_cache_control(response, no_cache=True, private=True)
+        return response
