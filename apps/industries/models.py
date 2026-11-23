@@ -20,6 +20,14 @@ class Industry(BaseModel):
         default="",
         help_text="Filename from static/images/industry/ e.g. 01.webp",
     )
+    featured_product = models.ForeignKey(
+        "products.Product",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="featured_in_industries",
+        help_text="Optional BJP product recommended on this industry's page.",
+    )
     order = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 

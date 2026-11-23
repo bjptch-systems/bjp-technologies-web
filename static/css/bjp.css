@@ -292,3 +292,77 @@
     max-width: calc(100vw - 110px);
   }
 }
+
+/* ── Industry page: featured product callout ── */
+.industry-product-callout-area {
+  padding: 0 0 80px;
+}
+.industry-product-callout {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+  border-radius: 12px;
+  padding: 40px 44px;
+  color: var(--white);
+}
+.industry-product-callout-text {
+  flex: 1 1 420px;
+  min-width: 0;
+}
+.industry-product-callout-label {
+  font-family: "Space Mono", monospace;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 14px;
+}
+.industry-product-callout h3 {
+  font-family: "DM Serif Display", serif;
+  font-weight: 400;
+  font-size: 36px;
+  color: var(--white);
+  margin: 0 0 10px;
+}
+.industry-product-callout p {
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0;
+  max-width: 62ch;
+}
+.industry-product-callout-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.industry-product-callout-actions .rts-btn.btn-primary {
+  background: var(--blue);
+  border-color: var(--blue);
+}
+.industry-product-callout-actions .rts-btn.btn-border {
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+@media (max-width: 575px) {
+  .industry-product-callout {
+    padding: 28px 22px;
+  }
+}
+
+/* ── Contact form: service dropdown (moved out of an inline style that broke the arrow) ── */
+.contact-service-select {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: "Outfit", sans-serif;
+  font-size: 15px;
+  color: var(--text-body);
+  background-color: #fff;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A94B0' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}

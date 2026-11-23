@@ -256,9 +256,10 @@ class LogoBrandingSettingsAdmin(_SiteSettingsSectionAdmin):
             {
                 "fields": (("logo", "logo_preview"),),
                 "description": (
-                    "Accepted formats: SVG, PNG, WebP. Must have a transparent background. "
-                    "The logo appears on dark navy backgrounds (navbar and footer) and is "
-                    "automatically displayed in white via CSS — no separate white version needed."
+                    "Leave the logo empty to use BJP's built-in logo — recommended, it is "
+                    "sharp on every screen. An uploaded logo replaces it in both the navy header "
+                    "and the light footer, shown in its own colours, so it must read well on "
+                    "both. Accepted formats: SVG, PNG, WebP with a transparent background."
                 ),
             },
         ),

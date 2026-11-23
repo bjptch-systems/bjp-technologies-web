@@ -51,6 +51,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.core.middleware.NoCacheHTMLMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -102,7 +103,14 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "public" / "static"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Django 5.1+ ignores the old STATICFILES_STORAGE setting, so it must be STORAGES.
+# Compression only, not the Manifest (hashed filename) variant: the theme's CSS/JS
+# reference files that don't exist (e.g. swiper-bundle.min.js.map), which makes the
+# manifest step fail collectstatic and therefore the deploy.
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "public" / "media"
