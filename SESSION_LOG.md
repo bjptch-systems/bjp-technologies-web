@@ -1591,3 +1591,72 @@ Confirmed the map URL itself was fine — the live page served a valid populated
 - [ ] Delete `venv.old-py312/` once the new venv is confirmed
 
 ---
+
+---
+
+## Session 23 — 2026-11-23 22:30 EAT
+
+**Goal:** Release 1 — align the website with BJP's new Google Business Profile: pause Cloud and Cybersecurity, add Bulk SMS, fix contact details, logo and Google signals.
+**Branch:** feature/release-1-services-google
+**Status:** ✅ Complete (preview approved by the developer)
+
+### What Was Done
+- Google Business Profile for BJP set up and live (done by the developer with guidance): Local store + Service business, Msakuzi address, 0764 764 011, hours Mon–Fri 8–6 / Sat 8–5 / Sun closed, four products (Smart POS, Smart BMS, PMS, Vikundi) with branded square images
+- Cloud & Infrastructure and Cybersecurity hidden (`is_active=False`), their URLs 302-redirect to the services list; all cloud/cyber service claims removed from templates, meta descriptions, Site Settings texts and industry texts (guarded data migrations)
+- Bulk SMS service added (sender ID, bulk campaigns, SMS API) with its own branded image
+- Services menu now built from active services; services list icons fixed (were SVG filenames rendered as CSS classes) — Font Awesome classes now
+- Contact page: hours match Google, "Get directions" button (Google profile), duplicate "Tanzania" removed
+- Footer Instagram link (@bjptechnologies); new `instagram_url`, `google_maps_url`, `google_site_verification` Site Settings fields
+- LocalBusiness structured data on home and contact pages; canonical link on every page; `www` → main domain 301 (production middleware, runs first)
+- Logo rebuilt as SVG (vector mark + Open Sans outlines) replacing the jagged PNGs; logo fits beside the menu button on phones
+- About counter relabelled "Security Audits Done" → "Systems Delivered"
+- Rebuilt local venv on Python 3.14 earlier (system upgrade); untouched here
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| apps/services/migrations/0003, 0004 | Created | Hide cloud/cyber, add Bulk SMS, consulting text, icons, order |
+| apps/industries/migrations/0003 | Created | Cloud/cyber wording replaced line by line |
+| apps/core/migrations/0011, 0012 | Created | New fields, Instagram, site texts, About counter |
+| apps/services/views.py, models.py | Modified | Inactive-service redirect; icon help text |
+| apps/core/middleware.py, config/settings/production.py | Modified | StripWwwMiddleware |
+| apps/core/templatetags/seo_tags.py | Created | business_jsonld tag |
+| apps/core/templates/core/base.html, navbar.html, footer.html | Modified | Canonical, verification meta, dynamic menu, SVG logos, Instagram |
+| apps/main/templates/main/home.html, about.html; services/list.html; industries/detail.html; contact/contact.html | Modified | Wording, Bulk SMS, hours, directions, structured data |
+| apps/core/models.py, admin.py | Modified | New fields and admin sections |
+| apps/core/management/commands/seed_content.py | Modified | Matches the migrations for fresh databases |
+| static/images/logo/bjp-logo-horizontal-{light,dark}.svg, static/images/service/bjp-bulk-sms.webp | Created | New assets |
+| static/css/bjp.css | Modified | Menu width, phone logo |
+| docs/generate_logo_svg.py, docs/generate_brand_images.py | Created/Modified | Asset generators |
+| CLAUDE.md | Modified | Services list and paused services |
+
+### Migrations
+- `services.0003`, `services.0004`, `industries.0003`, `core.0011`, `core.0012`
+- Applied: ✅ Yes (local); production via CI/CD
+
+### Tests
+- Tests written: 19
+- Tests passing: 195 / 195
+- Coverage areas: structured data, canonical, verification meta, www redirect, contact hours/directions, footer, services lineup and redirect, icons, industry solutions, About counter
+
+### Decisions Made
+- Decision: Hide paused services and 302-redirect rather than delete or 301.
+  Reason: Developer said "for now"; they can be re-enabled in admin and links come back.
+- Decision: Data migrations replace only text still matching the seeded wording.
+  Reason: Never overwrite content edited in admin.
+- Decision: Logo rebuilt as SVG instead of re-exporting a PNG.
+  Reason: Source PNG had speckled alpha; CLAUDE.md requires SVG.
+- Decision: No Google Maps Platform setup.
+  Reason: Paid/billing account; a plain link to the Business Profile does the job.
+
+### Blockers / Issues
+- Pre-existing: `STATICFILES_STORAGE` setting is ignored by Django 5.1+ (should be `STORAGES`), so static files are not hashed — new filenames used for changed assets to avoid caching issues.
+- Pre-existing: contact dropdown inline-style 404 (from session 22) still open.
+
+### Next Session Should
+- [ ] After deploy: developer adds Search Console (HTML tag) and sends the code
+- [ ] Release 2: Smart POS and Smart BMS product pages (preview first)
+- [ ] Move to `STORAGES` setting for hashed static files
+- [ ] Fix the contact dropdown inline-style 404
+
+---

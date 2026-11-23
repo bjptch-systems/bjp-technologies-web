@@ -100,7 +100,11 @@ class SocialMediaSettingsAdmin(_SiteSettingsSectionAdmin):
         (
             "Social Media Links",
             {
-                "fields": (("facebook_url", "twitter_url"), ("linkedin_url", "youtube_url")),
+                "fields": (
+                    ("instagram_url", "facebook_url"),
+                    ("linkedin_url", "twitter_url"),
+                    "youtube_url",
+                ),
                 "description": "Leave blank if not applicable. Icons only appear in the footer when a URL is set.",
             },
         ),
@@ -219,10 +223,11 @@ class ContactPageSettingsAdmin(_SiteSettingsSectionAdmin):
         (
             "Contact Page — Map",
             {
-                "fields": ("maps_embed_url",),
+                "fields": ("maps_embed_url", "google_maps_url"),
                 "description": (
-                    "Google Maps embed URL. To get a new URL: go to maps.google.com, "
-                    "find your location, click Share → Embed a map, copy the src= URL."
+                    "Embed URL: go to maps.google.com, find your location, click Share → "
+                    "Embed a map, copy the src= URL. Business Profile link: open the BJP "
+                    "profile on Google Maps and copy its link."
                 ),
             },
         ),
@@ -298,7 +303,7 @@ class AnalyticsSettingsAdmin(_SiteSettingsSectionAdmin):
         (
             "Google Analytics (GA4)",
             {
-                "fields": ("ga_measurement_id", "ga_enabled"),
+                "fields": ("ga_measurement_id", "ga_enabled", "google_site_verification"),
                 "description": (
                     "The GA4 tracking tag is injected on every public page when enabled. "
                     "It is suppressed automatically while DEBUG is on (local development), "

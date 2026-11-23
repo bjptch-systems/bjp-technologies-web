@@ -70,9 +70,12 @@ class TestServiceDetailView:
         response = client.get(reverse("services:detail", kwargs={"slug": "does-not-exist"}))
         assert response.status_code == 404
 
-    def test_inactive_service_detail_returns_404(self, client, inactive_service):
+    def test_inactive_service_redirects_to_services_list(self, client, inactive_service):
+        """Paused services keep old links working by sending them to the list (302,
+        temporary, so the page can return if the service is switched back on)."""
         response = client.get(reverse("services:detail", kwargs={"slug": inactive_service.slug}))
-        assert response.status_code == 404
+        assert response.status_code == 302
+        assert response["Location"] == reverse("services:list")
 
     def test_detail_shows_service_image(self, client, service):
         service.image = "bjp-software-development.webp"
@@ -83,3 +86,36 @@ class TestServiceDetailView:
     def test_detail_falls_back_when_image_blank(self, client, service):
         response = client.get(reverse("services:detail", kwargs={"slug": service.slug}))
         assert "images/service/bjp-services.webp" in response.content.decode()
+
+
+@pytest.mark.django_db
+class TestServiceLineup:
+    """Nov 2026: Cloud & Infrastructure and Cybersecurity paused, Bulk SMS added."""
+
+    def test_bulk_sms_page_is_live(self, client):
+        response = client.get(reverse("services:detail", kwargs={"slug": "bulk-sms"}))
+        assert response.status_code == 200
+        html = response.content.decode()
+        assert "Custom Sender ID" in html
+        assert "SMS API" in html
+        assert "images/service/bjp-bulk-sms.webp" in html
+
+    def test_navbar_lists_active_services_only(self, client, service, inactive_service):
+        html = client.get(reverse("main:home")).content.decode()
+        assert reverse("services:detail", kwargs={"slug": "bulk-sms"}) in html
+        assert reverse("services:detail", kwargs={"slug": service.slug}) in html
+        assert reverse("services:detail", kwargs={"slug": inactive_service.slug}) not in html
+
+    @pytest.mark.parametrize(
+        "url_name", ["main:home", "main:about", "services:list", "contact:contact"]
+    )
+    def test_public_pages_no_longer_advertise_paused_services(self, client, url_name):
+        html = client.get(reverse(url_name)).content.decode().lower()
+        assert "cybersecurity" not in html
+        assert "cloud infrastructure" not in html
+        assert "vapt" not in html
+
+    def test_services_list_icons_are_icon_classes_not_filenames(self, client):
+        html = client.get(reverse("services:list")).content.decode()
+        assert 'class="fa-regular fa-comment-sms"' in html
+        assert 'class="22.svg"' not in html
