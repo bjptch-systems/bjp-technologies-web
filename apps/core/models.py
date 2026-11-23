@@ -33,13 +33,14 @@ class SiteSettings(models.Model):
     twitter_url = models.URLField(blank=True, default="")
     linkedin_url = models.URLField(blank=True, default="")
     youtube_url = models.URLField(blank=True, default="")
+    instagram_url = models.URLField(blank=True, default="")
 
     # Home page — Hero
     hero_headline = models.CharField(max_length=200, default="Secure Technology. Scalable Growth.")
     hero_subtext = models.TextField(
         default=(
-            "Tanzania's trusted IT partner — delivering tailored software, cybersecurity, "
-            "cloud, and payment integration solutions that drive real business growth."
+            "Tanzania's trusted IT partner — delivering tailored software, bulk SMS, "
+            "and payment integration solutions that drive real business growth."
         )
     )
     hero_cta_primary = models.CharField(max_length=60, default="Get Free Consultation")
@@ -62,8 +63,8 @@ class SiteSettings(models.Model):
     about_body = models.TextField(
         default=(
             "BJP Technologies (T) Limited is a full-service IT company headquartered in "
-            "Ubungo, Dar es Salaam. We build and maintain the software, infrastructure, "
-            "and security systems that keep growing businesses running — from Tanzanian "
+            "Ubungo, Dar es Salaam. We build and maintain the software, payment and "
+            "communication systems that keep growing businesses running — from Tanzanian "
             "startups to regional enterprises."
         )
     )
@@ -77,21 +78,21 @@ class SiteSettings(models.Model):
     about_stat_2_value = models.CharField(max_length=20, default="30+")
     about_stat_2_label = models.CharField(max_length=60, default="Happy Clients")
     about_stat_3_value = models.CharField(max_length=20, default="20+")
-    about_stat_3_label = models.CharField(max_length=60, default="Security Audits Done")
+    about_stat_3_label = models.CharField(max_length=60, default="Systems Delivered")
     about_stat_4_value = models.CharField(max_length=20, default="5+")
     about_stat_4_label = models.CharField(max_length=60, default="Years in Business")
     about_intro = models.TextField(
         default=(
             "BJP Technologies (T) Limited is a Tanzanian IT solutions company headquartered "
             "in Ubungo, Dar es Salaam. We deliver enterprise-grade technology services — from "
-            "custom software development and cloud infrastructure to cybersecurity and managed "
+            "custom software development and payment integrations to bulk SMS and managed "
             "IT — helping businesses across East Africa grow securely and operate at scale."
         )
     )
     about_what_we_do = models.TextField(
         default=(
             "We bring together the technology, expertise, and support businesses need to solve "
-            "real problems. From secure web applications to cloud infrastructure and mobile money "
+            "real problems. From secure web applications to bulk SMS and mobile money "
             "payment integrations — we cover the full technology stack so our clients can focus "
             "on growth."
         )
@@ -110,7 +111,7 @@ class SiteSettings(models.Model):
     )
     services_banner_subtext = models.TextField(
         default=(
-            "From custom software to cloud infrastructure — we deliver secure, scalable "
+            "From custom software to bulk SMS — we deliver secure, scalable "
             "technology that helps businesses across East Africa grow with confidence."
         )
     )
@@ -130,6 +131,14 @@ class SiteSettings(models.Model):
     maps_embed_url = models.CharField(
         max_length=500,
         default="https://www.google.com/maps?q=-6.750417,39.090111&z=17&output=embed",
+    )
+    google_maps_url = models.URLField(
+        max_length=300,
+        default="https://www.google.com/maps?cid=17710749172499910700",
+        help_text=(
+            "Link to the BJP Business Profile on Google Maps. Used by the 'Get directions' "
+            "button and the business details Google reads from the site."
+        ),
     )
 
     # Branding — logo & favicon
@@ -173,6 +182,17 @@ class SiteSettings(models.Model):
         help_text=(
             "Master switch — uncheck to disable analytics site-wide without removing the ID. "
             "Tracking is also suppressed automatically when DEBUG is on (local development)."
+        ),
+    )
+
+    # Google Search Console
+    google_site_verification = models.CharField(
+        max_length=100,
+        blank=True,
+        default="",
+        help_text=(
+            "Search Console 'HTML tag' verification code — only the content value, e.g. "
+            "abc123XYZ. Leave blank once verified another way."
         ),
     )
 

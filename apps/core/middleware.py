@@ -1,3 +1,6 @@
+from django.http import HttpResponsePermanentRedirect
+
+
 class ContentSecurityPolicyMiddleware:
     """Send a Content-Security-Policy header on every response.
 
@@ -29,3 +32,22 @@ class ContentSecurityPolicyMiddleware:
             "frame-ancestors 'none';"
         )
         return response
+
+
+class StripWwwMiddleware:
+    """Permanently redirect www.bjptechnologies.co.tz to bjptechnologies.co.tz.
+
+    Both hosts are allowed and served, so without this Google indexes the same pages
+    twice (it already showed the contact page under www). One canonical host keeps the
+    search listing and the Business Profile pointing at a single site. Runs first so
+    http://www… reaches https://bjptechnologies.co.tz in one hop.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        host = request.get_host()
+        if host.startswith("www."):
+            return HttpResponsePermanentRedirect(f"https://{host[4:]}{request.get_full_path()}")
+        return self.get_response(request)

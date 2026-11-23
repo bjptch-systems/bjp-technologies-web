@@ -497,15 +497,16 @@ These are hard rules. Claude Code must never violate them.
 
 ## 13. Services Data (from Company Profile)
 
-These 7 services must be represented as database records in the `Service` model:
+These services are database records in the `Service` model (admin-editable):
 
 1. **Software Development** — Custom web apps, ERP, HR, Payroll, SACCOS loan management, POS, API integrations (PHP, Laravel)
 2. **Website & Digital Solutions** — Corporate websites, e-commerce, CMS, maintenance
-3. **Cloud & Infrastructure** — AWS, Oracle Cloud, DigitalOcean, Linux admin, cPanel/WHM, backup & recovery
-4. **Cybersecurity** — WAF (ModSecurity), VAPT, malware removal, secure auth, server hardening
-5. **Managed IT Services** — 24/7 monitoring, patching, helpdesk, data backup
-6. **Payment & System Integrations** — M-Pesa, Tigo Pesa, Airtel Money, Mastercard/Visa, bank gateways
-7. **IT Consulting & Advisory** — Infrastructure design, cloud migration, compliance, digital transformation
+3. **Managed IT Services** — 24/7 monitoring, patching, helpdesk, data backup
+4. **Payment & System Integrations** — M-Pesa, Tigo Pesa, Airtel Money, Mastercard/Visa, bank gateways
+5. **Bulk SMS** — Custom sender ID, bulk campaigns, SMS API (added Nov 2026)
+6. **IT Consulting & Advisory** — Systems design, digital transformation, technology roadmaps
+
+**Paused (Nov 2026):** Cloud & Infrastructure and Cybersecurity are `is_active=False` — hidden, not deleted. Their URLs 302-redirect to the services list until re-enabled in admin. Do not advertise cloud or cybersecurity anywhere on the site while paused.
 
 ### Industries Served
 1. Startups & SMEs

@@ -9,7 +9,7 @@ SERVICES = [
         "slug": "software-development",
         "tagline": "Custom software built for East African businesses",
         "order": 1,
-        "icon_svg": "22.svg",
+        "icon_svg": "fa-regular fa-laptop-code",
         "image": "bjp-software-development.webp",
         "description": (
             "We design and build custom software that fits exactly how your business works — "
@@ -31,7 +31,7 @@ SERVICES = [
         "slug": "website-digital-solutions",
         "tagline": "Professional digital presence for your organisation",
         "order": 2,
-        "icon_svg": "23.svg",
+        "icon_svg": "fa-regular fa-globe",
         "image": "bjp-website-digital-solutions.webp",
         "description": (
             "Your website is your most visible business asset. We build corporate websites, "
@@ -49,9 +49,10 @@ SERVICES = [
     {
         "name": "Cloud & Infrastructure",
         "slug": "cloud-infrastructure",
+        "is_active": False,  # paused Nov 2026
         "tagline": "Scalable, reliable infrastructure on leading cloud platforms",
         "order": 3,
-        "icon_svg": "24.svg",
+        "icon_svg": "fa-regular fa-cloud-arrow-up",
         "image": "bjp-cloud-infrastructure.webp",
         "description": (
             "We design, deploy, and manage cloud infrastructure on AWS, Oracle Cloud, and "
@@ -71,9 +72,10 @@ SERVICES = [
     {
         "name": "Cybersecurity",
         "slug": "cybersecurity",
+        "is_active": False,  # paused Nov 2026
         "tagline": "Protect your systems, data, and reputation",
         "order": 4,
-        "icon_svg": "25.svg",
+        "icon_svg": "fa-regular fa-shield-halved",
         "image": "bjp-cybersecurity.webp",
         "description": (
             "Security is not optional — it is foundational. We apply enterprise-grade security "
@@ -94,7 +96,7 @@ SERVICES = [
         "slug": "managed-it-services",
         "tagline": "Your IT department — without the overhead",
         "order": 5,
-        "icon_svg": "26.svg",
+        "icon_svg": "fa-regular fa-headset",
         "image": "bjp-managed-it-services.webp",
         "description": (
             "Running IT in-house is expensive and distracting. Our managed IT service gives you "
@@ -116,7 +118,7 @@ SERVICES = [
         "slug": "payment-system-integrations",
         "tagline": "Connect your software to Tanzania's payment ecosystem",
         "order": 6,
-        "icon_svg": "27.svg",
+        "icon_svg": "fa-regular fa-mobile-screen-button",
         "image": "bjp-payment-system-integrations.webp",
         "description": (
             "Tanzania's digital economy runs on mobile money. We integrate M-Pesa, Tigo Pesa, "
@@ -132,24 +134,44 @@ SERVICES = [
         ),
     },
     {
+        "name": "Bulk SMS",
+        "slug": "bulk-sms",
+        "tagline": "Reach thousands of customers with one message",
+        "order": 7,
+        "icon_svg": "fa-regular fa-comment-sms",
+        "image": "bjp-bulk-sms.webp",
+        "description": (
+            "Bulk SMS lets you send alerts, reminders, promotions and updates to many people at "
+            "once, straight to their phones. Messages go out under your own business name as the "
+            "sender ID, so customers know who is writing. Run campaigns to your whole customer or "
+            "member list, or connect your own system through our SMS API to send messages "
+            "automatically, such as payment reminders, receipts and appointment confirmations."
+        ),
+        "bullet_points": (
+            "Custom Sender ID — messages show your business name\n"
+            "Bulk Campaigns — reach whole customer or member lists at once\n"
+            "SMS API — send automatically from your own system or app\n"
+            "Alerts, reminders, confirmations and promotions"
+        ),
+    },
+    {
         "name": "IT Consulting & Advisory",
         "slug": "it-consulting-advisory",
         "tagline": "Strategic technology guidance for growing organisations",
-        "order": 7,
-        "icon_svg": "28.svg",
+        "order": 8,
+        "icon_svg": "fa-regular fa-lightbulb",
         "image": "bjp-it-consulting-advisory.webp",
         "description": (
             "Technology decisions made today shape your business for years. Our consulting "
-            "team works alongside your leadership to design infrastructure that scales, plan "
-            "cloud migrations that reduce cost, and build cybersecurity postures that satisfy "
-            "compliance requirements. We translate technical complexity into clear business "
-            "decisions — so you invest in the right things."
+            "team works alongside your leadership to plan systems that scale, choose the right "
+            "technology for each job, and guide your digital transformation step by step. We "
+            "translate technical complexity into clear business decisions — so you invest in the "
+            "right things."
         ),
         "bullet_points": (
-            "IT Infrastructure Design & Planning\n"
-            "Cloud Migration & Optimisation\n"
-            "Cybersecurity & Compliance Advisory\n"
-            "Digital Transformation Strategy"
+            "IT Systems Design & Planning\n"
+            "Digital Transformation Strategy\n"
+            "Technology Roadmap Planning"
         ),
     },
 ]
@@ -170,7 +192,7 @@ INDUSTRIES = [
         "services_offered": (
             "Custom web applications and business systems\n"
             "Corporate website design and development\n"
-            "Cloud infrastructure setup on DigitalOcean or AWS\n"
+            "Bulk SMS for customer alerts and promotions\n"
             "Mobile money payment integrations (M-Pesa, Tigo Pesa)\n"
             "IT consulting to plan your technology roadmap\n"
             "Managed IT support as your business grows"
@@ -185,13 +207,13 @@ INDUSTRIES = [
         "description": (
             "SACCOS, microfinance institutions, and banks operate in a high-stakes environment "
             "where security, accuracy, and compliance are non-negotiable. We build and maintain "
-            "the loan management systems, payment integrations, and secure infrastructure that "
+            "the loan management systems, payment integrations, and reliable systems that "
             "financial organisations depend on — with the reliability their members expect."
         ),
         "services_offered": (
             "SACCOS loan management and financial systems\n"
             "Mobile money and bank payment gateway integrations\n"
-            "Cybersecurity hardening and VAPT assessments\n"
+            "Bulk SMS alerts for members and customers\n"
             "Secure authentication and access control\n"
             "24/7 server monitoring and incident response\n"
             "Compliance-focused IT advisory"
@@ -206,13 +228,13 @@ INDUSTRIES = [
         "description": (
             "NGOs and development organisations need reliable, cost-effective technology that "
             "lets them focus on impact rather than IT problems. We deliver websites, data "
-            "systems, and cloud infrastructure that keep your programmes running — and your "
+            "systems, and SMS communication that keep your programmes running — and your "
             "donor reporting accurate."
         ),
         "services_offered": (
             "Institutional and programme websites\n"
             "Beneficiary data and reporting systems\n"
-            "Cloud infrastructure setup and management\n"
+            "Bulk SMS for beneficiary and community updates\n"
             "Secure remote access and collaboration tools\n"
             "IT consulting for digital transformation\n"
             "Ongoing managed IT support"
@@ -227,15 +249,15 @@ INDUSTRIES = [
         "description": (
             "Schools, colleges, and training institutions need technology that works reliably "
             "for students, staff, and administrators alike. We build student management systems, "
-            "institutional websites, and the secure infrastructure that keeps academic data safe "
+            "institutional websites, and the reliable systems that keep academic data safe "
             "and accessible."
         ),
         "services_offered": (
             "Student management and academic systems\n"
             "Institutional websites and online portals\n"
-            "Cloud-based data storage and backup\n"
-            "Network infrastructure setup and management\n"
-            "Cybersecurity awareness and endpoint protection\n"
+            "Data storage and backup\n"
+            "Bulk SMS for parents, students and staff\n"
+            "School fees payment integrations (mobile money)\n"
             "IT helpdesk and managed support"
         ),
     },
@@ -247,16 +269,16 @@ INDUSTRIES = [
         "image": "bjp-healthcare.webp",
         "description": (
             "Healthcare organisations handle sensitive patient data that demands the highest "
-            "levels of security and reliability. We build and maintain the systems, secure "
-            "infrastructure, and data management solutions that healthcare providers need — "
+            "levels of security and reliability. We build and maintain the systems and "
+            "data management solutions that healthcare providers need — "
             "with the uptime their patients depend on."
         ),
         "services_offered": (
             "Patient management and health record systems\n"
             "Secure data storage and backup solutions\n"
-            "Cybersecurity hardening and access control\n"
-            "24/7 infrastructure monitoring\n"
-            "Cloud migration for healthcare applications\n"
+            "Access control so staff see only what they need\n"
+            "24/7 system monitoring\n"
+            "Bulk SMS appointment reminders\n"
             "IT consulting for compliance and data protection"
         ),
     },
@@ -277,7 +299,7 @@ INDUSTRIES = [
             "E-commerce platform development\n"
             "Mobile money payment integrations\n"
             "Business website and online catalogue\n"
-            "Cloud infrastructure for multi-branch operations\n"
+            "Bulk SMS for promotions and customer updates\n"
             "Managed IT support and system maintenance"
         ),
     },

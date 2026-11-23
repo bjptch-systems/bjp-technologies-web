@@ -33,7 +33,7 @@
                             {% if company.logo %}
                                 <img src="{{ company.logo.url }}" alt="{{ company.name }}" style="filter: brightness(0) invert(1); max-height:50px; width:auto;">
                             {% else %}
-                                <img src="{% static 'images/logo/bjp-logo-horizontal-transparent.png' %}" alt="{{ company.name }}">
+                                <img src="{% static 'images/logo/bjp-logo-horizontal-dark.svg' %}" alt="{{ company.name }}">
                             {% endif %}
                         </a>
                         <p class="disc">
@@ -97,6 +97,9 @@
                         </p>
                         <div class="social-copyright-area">
                             <ul>
+                                {% if company.instagram_url %}
+                                <li><a href="{{ company.instagram_url }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a></li>
+                                {% endif %}
                                 {% if company.facebook_url %}
                                 <li><a href="{{ company.facebook_url }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a></li>
                                 {% endif %}

@@ -18,7 +18,7 @@
     {% endif %}
 
     <meta name="description" content="{% block meta_description %}BJP Technologies (T) Limited — Secure Technology. Scalable Growth. Professional IT solutions in Tanzania.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}IT solutions Tanzania, cybersecurity, cloud, software development, Dar es Salaam{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}IT company Tanzania, software development, bulk SMS, mobile money integration, POS software, Dar es Salaam{% endblock %}">
 
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}BJP Technologies (T) Limited{% endblock %}">
@@ -34,6 +34,11 @@
         <link rel="icon" type="image/png" sizes="64x64" href="{% static 'images/logo/bjp-favicon-64.png' %}">
         <link rel="apple-touch-icon" href="{% static 'images/logo/bjp-favicon-256.png' %}">
     {% endif %}
+    <link rel="canonical" href="https://{{ company.domain }}{{ request.path }}">
+    {% if company.google_site_verification %}
+    <meta name="google-site-verification" content="{{ company.google_site_verification }}">
+    {% endif %}
+    {% block structured_data %}{% endblock %}
     <title>{% block title %}BJP Technologies (T) Limited{% endblock %} | Secure Technology. Scalable Growth.</title>
 
     <!-- Google Fonts -->

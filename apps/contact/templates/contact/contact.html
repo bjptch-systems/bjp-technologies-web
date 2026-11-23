@@ -1,11 +1,13 @@
 {% extends 'core/base.html' %}
-{% load static %}
+{% load static seo_tags %}
 
 {% block title %}Contact Us — BJP Technologies (T) Limited{% endblock %}
 {% block meta_description %}Get in touch with BJP Technologies. Submit an enquiry about our IT services, request a consultation, or reach our team in Dar es Salaam, Tanzania.{% endblock %}
 {% block og_title %}Contact Us — BJP Technologies (T) Limited{% endblock %}
 {% block og_description %}Get in touch with BJP Technologies. Request a consultation or submit an enquiry about our IT services in Dar es Salaam, Tanzania.{% endblock %}
 {% block og_url %}/contact/{% endblock %}
+
+{% block structured_data %}{% business_jsonld %}{% endblock %}
 
 {% block content %}
 
@@ -47,9 +49,14 @@
                     <p style="font-weight:600; color:var(--navy); margin-bottom:8px;">Office Address</p>
                     <span style="color:var(--text-body); line-height:1.7;">
                         {{ company.address }}<br>
-                        {{ company.postal }}<br>
-                        Tanzania
+                        {{ company.postal }}
                     </span>
+                    <div style="margin-top:18px;">
+                        <a href="{{ company.google_maps_url }}" target="_blank" rel="noopener"
+                           class="rts-btn btn-border" style="display:inline-flex; align-items:center; gap:8px;">
+                            <i class="fa-sharp fa-regular fa-diamond-turn-right"></i> Get directions
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-offset="120" data-wow-delay=".35s">
@@ -61,7 +68,9 @@
                     <p style="font-weight:600; color:var(--navy); margin-bottom:8px;">Phone</p>
                     <span style="color:var(--text-body); line-height:1.7;">
                         <a href="tel:{{ company.phone|cut:' ' }}" style="color:inherit; text-decoration:none;">{{ company.phone }}</a><br>
-                        Mon – Sat &nbsp;|&nbsp; 8 AM – 6 PM EAT
+                        Mon – Fri &nbsp;|&nbsp; 8 AM – 6 PM<br>
+                        Saturday &nbsp;|&nbsp; 8 AM – 5 PM<br>
+                        Sunday &nbsp;|&nbsp; Closed
                     </span>
                 </div>
             </div>

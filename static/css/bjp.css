@@ -276,3 +276,19 @@
 .map-consent-placeholder .map-consent-alt a {
   color: var(--blue);
 }
+
+/* ── Services dropdown: full service names on one line ── */
+.header-area-four .has-dropdown .submenu.parent-nav {
+  min-width: 300px;
+}
+.header-area-four .has-dropdown .submenu.parent-nav li a {
+  white-space: nowrap;
+}
+
+/* ── Logo on phones: leave room for the menu button ── */
+@media (max-width: 575px) {
+  .header-area-four .logo img {
+    height: auto !important;
+    max-width: calc(100vw - 110px);
+  }
+}
