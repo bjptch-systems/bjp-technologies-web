@@ -87,6 +87,29 @@
     </div>
 </div>
 
+{% with product=industry.featured_product %}
+{% if product and product.is_live %}
+<!-- Featured product for this industry (admin: Industry → Featured product) -->
+<div class="industry-product-callout-area">
+    <div class="container">
+        <div class="industry-product-callout">
+            <div class="industry-product-callout-text">
+                <p class="industry-product-callout-label">Recommended for {{ industry.name }}</p>
+                <h3>{{ product.name }}</h3>
+                <p>{{ product.short_description }}</p>
+            </div>
+            <div class="industry-product-callout-actions">
+                <a href="{% url 'products:detail' slug=product.slug %}" class="rts-btn btn-primary">See {{ product.name }}</a>
+                {% if product.cta_primary_url %}
+                <a href="{{ product.cta_primary_url }}" class="rts-btn btn-border" target="_blank" rel="noopener">{{ product.cta_primary_label }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endwith %}
+
 <!-- Our IT Services for this Industry -->
 <div class="rts-section-gap bg-light">
     <div class="container">

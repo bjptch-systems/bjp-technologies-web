@@ -18,4 +18,4 @@ class IndustryDetailView(DetailView):
     slug_url_kwarg = "slug"
 
     def get_queryset(self):
-        return Industry.objects.filter(is_active=True)
+        return Industry.objects.filter(is_active=True).select_related("featured_product")

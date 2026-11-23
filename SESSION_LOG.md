@@ -1660,3 +1660,65 @@ Confirmed the map URL itself was fine — the live page served a valid populated
 - [ ] Fix the contact dropdown inline-style 404
 
 ---
+
+---
+
+## Session 24 — 2026-11-24 10:00 EAT
+
+**Goal:** Release 2 — Smart POS and Smart BMS product pages, plus fixes found while checking Release 1 live.
+**Branch:** feature/release-2-products
+**Status:** ✅ Complete (preview approved by the developer)
+
+### What Was Done
+- Release 1 verified live: logo SVGs deployed but an admin-uploaded PNG overrode them; developer cleared it in admin. Found the host's NGINX serving cached copies of `/` and `/products/` with the deleted logo
+- BMS rewritten as **Smart BMS** from bms.bjptechnologies.co.tz (slug `bms` kept); removed unconfirmed claims (mobile money, VAT/TIN, low-stock alerts) and mock screenshots
+- **Smart POS** product added (retail + restaurant features), CTAs to the product site: trial (`register?product=bms_shop` / `bms_full`) and pricing; no prices copied
+- Branded wide hero images and product logos for both; product order PMS, Smart POS, Smart BMS, Vikundi
+- `Industry.featured_product` (admin-editable); Retail & Wholesale → Smart POS callout on its page
+- Contact prefill text for Smart BMS / Smart POS
+- Product detail headings that were PMS-specific made generic
+- `NoCacheHTMLMiddleware` (Cache-Control: no-cache, private on HTML) to stop server-side page caching
+- Uploaded logos no longer forced white; admin help text explains leaving it empty
+- Contact service dropdown: broken inline `url(\"…\")` moved to a CSS class
+- `STATICFILES_STORAGE` → `STORAGES` with WhiteNoise `CompressedStaticFilesStorage` (Manifest variant tested and rejected: theme JS references a missing `swiper-bundle.min.js.map`, which fails collectstatic)
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| apps/products/migrations/0007_smart_pos_smart_bms.py | Created | Smart BMS rewrite (guarded on original name), Smart POS, order |
+| apps/industries/models.py, admin.py, views.py, migrations/0004 | Modified/Created | featured_product FK + Retail → Smart POS |
+| apps/industries/templates/industries/detail.html | Modified | Featured product callout |
+| apps/products/templates/products/detail.html | Modified | Generic section headings |
+| apps/contact/views.py, templates/contact/contact.html | Modified | Prefill text, dropdown class |
+| apps/core/middleware.py, config/settings/base.py, production.py | Modified | NoCacheHTMLMiddleware, STORAGES |
+| apps/core/models.py, admin.py, migrations/0013, templates/core/navbar.html, footer.html | Modified/Created | Logo upload behaviour + help text |
+| static/images/products/smart-pos/*, static/images/products/bms/smart-bms-* | Created | Hero images and logos |
+| static/css/bjp.css | Modified | Callout, dropdown styles |
+| apps/products/tests/test_models.py, apps/core/tests/test_release2_fixes.py, apps/contact/tests/test_product_prefill.py | Modified/Created | Tests |
+
+### Migrations
+- `products.0007`, `industries.0004`, `core.0013`
+- Applied: ✅ Yes (local); production via CI/CD
+
+### Tests
+- Tests written: 13 (3 outdated BMS tests replaced)
+- Tests passing: 208 / 208
+- Coverage areas: product content and CTAs, assets exist, industry callout, cache headers, logo upload, dropdown, storage setting
+
+### Decisions Made
+- Decision: Product buttons link to the public product site (trial + pricing).
+  Reason: Developer approved in Release 2 scope; replaces the earlier "hide the live BMS URL" rule (test updated with this note).
+- Decision: Keep slug `bms` for Smart BMS.
+  Reason: Existing links and the contact `?product=bms` hint keep working.
+- Decision: No hashed static filenames.
+  Reason: Would fail every deploy on missing theme references; WhiteNoise already caches for only 60 s.
+
+### Blockers / Issues
+- None
+
+### Next Session Should
+- [ ] After deploy: confirm `/` and `/products/` return `Cache-Control: no-cache, private` and show current content
+- [ ] Optionally point the Google Business Profile product links at the new /products/ pages
+- [ ] Real product screenshots when BJP has them
+
+---

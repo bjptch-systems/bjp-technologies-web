@@ -147,8 +147,9 @@ class SiteSettings(models.Model):
         blank=True,
         validators=[validate_logo_file],
         help_text=(
-            "Accepted: SVG, PNG, WebP. Must have a transparent background. "
-            "Used in the navbar and footer on dark navy backgrounds."
+            "Leave empty to use BJP's built-in logo (recommended). An uploaded file replaces "
+            "it in both the navy header and the light footer, in its own colours, so it must "
+            "read well on both. Accepted: SVG, PNG, WebP with a transparent background."
         ),
     )
     favicon = models.FileField(

@@ -18,7 +18,7 @@ def test_bms_hint_prefills_message_and_renders_banner(client):
     assert resp.context["product_hint"] is not None
     assert resp.context["product_hint"].slug == "bms"
     # Initial value of the message field carries the demo-request line
-    assert b"BMS (Business Management System)" in resp.content
+    assert b"Smart BMS (accounting, HR and payroll)" in resp.content
     # Banner is rendered
     assert b"Requesting a demo of" in resp.content
 
