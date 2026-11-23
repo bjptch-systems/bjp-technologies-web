@@ -145,6 +145,12 @@ class Product(BaseModel):
         default="",
         help_text="Optional hex color (e.g. #0F766E) for a subtle product badge.",
     )
+    icon = models.CharField(
+        max_length=60,
+        blank=True,
+        default="",
+        help_text="Font Awesome icon class for the home page showcase, e.g. fa-regular fa-building",
+    )
     screenshots = models.JSONField(
         default=list,
         blank=True,
@@ -169,6 +175,12 @@ class Product(BaseModel):
         if not self.slug:
             self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    @property
+    def short_name(self) -> str:
+        """Name without its descriptor, for tabs and buttons ('Vikundi — VICOBA
+        Management System' → 'Vikundi', 'PMS by BJP Technologies' → 'PMS')."""
+        return self.name.split(" — ")[0].replace(" by BJP Technologies", "").strip()
 
     @property
     def is_live(self) -> bool:

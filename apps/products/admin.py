@@ -106,6 +106,7 @@ class ProductAdmin(ModelAdmin):
                 "fields": (
                     ("hero_image", "og_image"),
                     ("logo_image", "accent_color"),
+                    "icon",
                     "screenshots",
                 ),
                 "description": (
