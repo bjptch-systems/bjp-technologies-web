@@ -1,0 +1,94 @@
+{% load static %}
+{% comment %}
+Home page product showcase: tabs on the left, the selected product on the right.
+static/js/products-showcase.js switches tabs; without JavaScript every product is
+shown one under another and the tab list is hidden.
+{% endcomment %}
+{% if products %}
+<section class="ps-section" id="our-products" aria-labelledby="ps-heading">
+    <div class="container">
+        <div class="ps-head">
+            <span class="ps-eyebrow">Our products</span>
+            <h2 id="ps-heading" class="ps-title">Software that runs Tanzanian businesses</h2>
+            <p class="ps-lede">
+                Built, run and supported by BJP in Dar es Salaam — for shops, restaurants,
+                companies, landlords and savings groups.
+            </p>
+        </div>
+
+        <div class="ps-shell" data-product-showcase>
+            <div class="ps-tabs" role="tablist" aria-label="BJP products">
+                {% for product in products %}
+                <button type="button" class="ps-tab" role="tab"
+                        id="ps-tab-{{ product.slug }}"
+                        aria-controls="ps-panel-{{ product.slug }}"
+                        aria-selected="{% if forloop.first %}true{% else %}false{% endif %}"
+                        {% if not forloop.first %}tabindex="-1"{% endif %}
+                        style="--ps-accent: {{ product.accent_color|default:'#00C6FF' }};">
+                    <span class="ps-tab-icon" aria-hidden="true">
+                        <i class="{{ product.icon|default:'fa-regular fa-cube' }}"></i>
+                    </span>
+                    <span class="ps-tab-text">
+                        <span class="ps-tab-name">{{ product.short_name }}</span>
+                        <span class="ps-tab-tagline">{{ product.tagline }}</span>
+                    </span>
+                </button>
+                {% endfor %}
+            </div>
+
+            <div class="ps-panels">
+                {% for product in products %}
+                <article class="ps-panel{% if forloop.first %} is-active{% endif %}" role="tabpanel"
+                         id="ps-panel-{{ product.slug }}"
+                         aria-labelledby="ps-tab-{{ product.slug }}"
+                         style="--ps-accent: {{ product.accent_color|default:'#00C6FF' }};">
+                    <div class="ps-panel-body">
+                        <p class="ps-panel-kicker">
+                            <i class="{{ product.icon|default:'fa-regular fa-cube' }}" aria-hidden="true"></i>
+                            {{ product.short_name }}
+                        </p>
+                        <h3 class="ps-panel-title">{{ product.tagline }}</h3>
+                        <p class="ps-panel-desc">{% if product.byline %}{{ product.byline }}{% else %}{{ product.short_description|truncatewords:28 }}{% endif %}</p>
+                        {% if product.features %}
+                        <ul class="ps-features">
+                            {% for feature in product.features|slice:":4" %}
+                            <li><i class="fa-regular fa-circle-check" aria-hidden="true"></i>{{ feature.name }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                        <div class="ps-actions">
+                            <a href="{% url 'products:detail' slug=product.slug %}" class="ps-btn ps-btn-primary">
+                                Explore {{ product.short_name }}
+                                <i class="fa-regular fa-arrow-right" aria-hidden="true"></i>
+                            </a>
+                            {% if product.cta_primary_url %}
+                            {% with external=product.cta_primary_url|slice:":4"|lower %}
+                            <a href="{{ product.cta_primary_url }}" class="ps-btn ps-btn-ghost"
+                               {% if external == 'http' %}target="_blank" rel="noopener"{% endif %}>
+                                {{ product.cta_primary_label }}
+                                {% if external == 'http' %}<i class="fa-regular fa-arrow-up-right-from-square" aria-hidden="true"></i>{% endif %}
+                            </a>
+                            {% endwith %}
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if product.hero_image %}
+                    <div class="ps-panel-media">
+                        <img src="{% static 'images/' %}{{ product.hero_image }}"
+                             alt="{{ product.name }}" loading="lazy" width="1920" height="1080">
+                    </div>
+                    {% endif %}
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="ps-foot">
+            <a href="{% url 'products:list' %}" class="rts-btn btn-border btn-bold">
+                See all products
+                <img class="injectable" src="{% static 'images/service/icons/13.svg' %}" alt="arrow">
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
