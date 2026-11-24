@@ -1770,3 +1770,55 @@ Confirmed the map URL itself was fine — the live page served a valid populated
 - [ ] After deploy: check the showcase live on desktop and phone
 
 ---
+
+---
+
+## Session 26 — 2026-11-24 15:00 EAT
+
+**Goal:** Make Smart Restaurant its own product and narrow Smart POS to shops.
+**Branch:** feature/smart-restaurant
+**Status:** ✅ Complete (preview approved by the developer)
+
+### What Was Done
+- Products showcase (session 25) merged and released to main (#91, #92)
+- Smart Restaurant product added from bms.bjptechnologies.co.tz/smart-pos/restaurant: 8 features, trial → `register?product=bms_shop&business=restaurant`, pricing link, own image, logo, icon and accent
+- Smart POS rewritten as shops-only (guarded on its original tagline); trial → `register?product=bms_shop`; new hero without "Restaurant mode"
+- Product order: PMS 1, Smart POS 2, Smart Restaurant 3, Smart BMS 4, Vikundi 5
+- Contact `?product=smart-restaurant` prefill
+- Kitchen screen icon `fa-display` → `fa-tv` (`fa-display` has no glyph in the site's Font Awesome build); test guards against blank icons
+- Google profile images: new BJP-Smart-Restaurant.png, BJP-Smart-POS.png without restaurant (in ~/Pictures/BJP-Google-Products)
+- Also: BJP School System research prompt written for a separate Claude session (clean-room, Django, VPS hosting) — saved at ~/Dev/BJP/Prompts and as an artifact
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| apps/products/migrations/0009_smart_restaurant.py | Created | Smart Restaurant + shops-only Smart POS + order |
+| apps/contact/views.py | Modified | Prefill text |
+| static/images/products/smart-restaurant/{hero.webp,logo.svg} | Created | Assets |
+| static/images/products/smart-pos/{hero-shops.webp,logo.svg} | Created/Modified | Shops-only assets |
+| apps/products/tests/test_models.py, apps/contact/tests/test_product_prefill.py | Modified | Tests |
+
+### Migrations
+- `products.0009_smart_restaurant`
+- Applied: ✅ Yes (local); production via CI/CD
+
+### Tests
+- Tests written: 4 (1 replaced)
+- Tests passing: 214 / 214
+- Coverage areas: Smart Restaurant content and CTAs, shops-only Smart POS, ordering, prefill, blank icons
+
+### Decisions Made
+- Decision: Keep Smart Restaurant's buttons on the shared product site with the restaurant sign-up parameter.
+  Reason: On the product site restaurant is a mode of the same system; the developer chose not to rename it there.
+- Decision: The InfixEdu-based `school-erp` is not used as a source for BJP's school product.
+  Reason: Licensed third-party code with its licensing layer removed; BJP's system is built clean-room from its own research.
+
+### Blockers / Issues
+- None
+
+### Next Session Should
+- [ ] After deploy: check the Smart Restaurant page and the five-tab showcase live
+- [ ] Developer: add Smart Restaurant to the Google Business Profile and replace the Smart POS image
+- [ ] Review the School System research artifact when the other session produces it
+
+---

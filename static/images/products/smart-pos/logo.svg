@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 88" width="360" height="88" role="img" aria-label="Smart POS — for shops and restaurants">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 88" width="360" height="88" role="img" aria-label="Smart POS — for shops">
   <defs>
     <linearGradient id="posBadge" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#22c3e6"/>
@@ -14,5 +14,5 @@
   <rect x="29" y="46" width="14" height="3" rx="1.5" fill="#0b6fc7"/>
   <!-- Wordmark -->
   <text x="84" y="48" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" fill="#1a1d21" letter-spacing="1">Smart POS</text>
-  <text x="85" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#5b6670" letter-spacing="0.3">For shops &amp; restaurants</text>
+  <text x="85" y="68" font-family="Segoe UI, Arial, sans-serif" font-size="13.5" font-weight="600" fill="#5b6670" letter-spacing="0.3">For shops</text>
 </svg>
