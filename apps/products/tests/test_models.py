@@ -226,7 +226,7 @@ class TestProductsOrdering:
             .order_by("order")
             .values_list("slug", flat=True)
         )
-        assert slugs == ["pms", "smart-pos", "smart-restaurant", "bms", "vikundi"]
+        assert slugs == ["pms", "smart-pos", "smart-restaurant", "bms", "vikundi", "lms"]
 
 
 @pytest.mark.django_db
@@ -285,6 +285,30 @@ class TestSmartRestaurantSeed:
             "https://bms.bjptechnologies.co.tz/register?product=bms_shop&business=restaurant"
         )
         assert rest.cta_secondary_url == "https://bms.bjptechnologies.co.tz/pricing"
+
+
+@pytest.mark.django_db
+class TestLmsSeed:
+    def test_lms_is_live_and_books_a_demo(self):
+        lms = Product.objects.get(slug="lms")
+        assert lms.is_live
+        assert lms.short_name == "LMS"
+        assert lms.cta_primary_label == "Book a demo"
+        assert lms.cta_primary_url == "/contact/?product=lms"
+        assert lms.cta_secondary_url == ""
+        assert lms.pricing_summary.startswith("Price on request")
+
+    def test_lms_has_no_live_screenshots_or_unconfirmed_integrations(self):
+        """Screenshots of the live system would show a client's customers, and the
+        bureau, banking and gateway links are not confirmed connected."""
+        lms = Product.objects.get(slug="lms")
+        assert lms.screenshots == []
+        text = " ".join(
+            [lms.long_description, lms.differentiators]
+            + [f["name"] + " " + f["description"] for f in lms.features]
+        ).lower()
+        for claim in ("credit bureau", "payment gateway", "open banking"):
+            assert claim not in text
 
 
 @pytest.mark.django_db
