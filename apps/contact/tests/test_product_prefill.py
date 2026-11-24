@@ -54,3 +54,11 @@ def test_smart_restaurant_hint_prefills_message(client):
     assert resp.status_code == 200
     assert resp.context["product_hint"].slug == "smart-restaurant"
     assert b"Smart Restaurant (for restaurants and caf" in resp.content
+
+
+@pytest.mark.django_db
+def test_lms_hint_prefills_book_a_demo_message(client):
+    resp = client.get(reverse("contact:contact") + "?product=lms")
+    assert resp.status_code == 200
+    assert resp.context["product_hint"].slug == "lms"
+    assert b"book a demo of LMS (Loan Management System)" in resp.content
