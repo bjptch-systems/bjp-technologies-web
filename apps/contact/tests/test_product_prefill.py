@@ -46,3 +46,11 @@ def test_no_product_param_renders_clean_form(client):
     assert resp.status_code == 200
     assert resp.context.get("product_hint") is None
     assert b"Requesting a demo of" not in resp.content
+
+
+@pytest.mark.django_db
+def test_smart_restaurant_hint_prefills_message(client):
+    resp = client.get(reverse("contact:contact") + "?product=smart-restaurant")
+    assert resp.status_code == 200
+    assert resp.context["product_hint"].slug == "smart-restaurant"
+    assert b"Smart Restaurant (for restaurants and caf" in resp.content

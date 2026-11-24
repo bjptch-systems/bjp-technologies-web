@@ -226,18 +226,21 @@ class TestProductsOrdering:
             .order_by("order")
             .values_list("slug", flat=True)
         )
-        assert slugs == ["pms", "smart-pos", "bms", "vikundi"]
+        assert slugs == ["pms", "smart-pos", "smart-restaurant", "bms", "vikundi"]
 
 
 @pytest.mark.django_db
 class TestSmartPOSSeed:
-    def test_smart_pos_is_live_with_retail_and_restaurant_features(self):
+    def test_smart_pos_is_live_and_shops_only(self):
         pos = Product.objects.get(slug="smart-pos")
         assert pos.is_live
         names = [f["name"] for f in pos.features]
         assert "Sell by weight or volume" in names
-        assert "Kitchen screen" in names
-        assert "QR menu at the table" in names
+        assert "Kitchen screen" not in names
+        text = " ".join(
+            [pos.tagline, pos.short_description, pos.long_description, pos.target_users]
+        ).lower()
+        assert "restaurant" not in text
         assert pos.screenshots == []
 
     def test_smart_pos_ctas_go_to_the_product_site(self):
@@ -251,6 +254,45 @@ class TestSmartPOSSeed:
         from django.conf import settings
 
         pos = Product.objects.get(slug="smart-pos")
+        rest = Product.objects.get(slug="smart-restaurant")
         bms = Product.objects.get(slug="bms")
-        for rel in (pos.hero_image, pos.logo_image, bms.hero_image, bms.logo_image):
+        for rel in (
+            pos.hero_image,
+            pos.logo_image,
+            rest.hero_image,
+            rest.logo_image,
+            bms.hero_image,
+            bms.logo_image,
+        ):
             assert (Path(settings.BASE_DIR) / "static" / "images" / rel).exists(), rel
+
+
+@pytest.mark.django_db
+class TestSmartRestaurantSeed:
+    def test_smart_restaurant_is_live_with_kitchen_features(self):
+        rest = Product.objects.get(slug="smart-restaurant")
+        assert rest.is_live
+        assert rest.short_name == "Smart Restaurant"
+        names = [f["name"] for f in rest.features]
+        for feature in ("Tables and orders", "Kitchen screen", "QR menu at the table"):
+            assert feature in names
+        assert rest.screenshots == []
+        assert rest.icon == "fa-regular fa-utensils"
+
+    def test_smart_restaurant_trial_opens_restaurant_sign_up(self):
+        rest = Product.objects.get(slug="smart-restaurant")
+        assert rest.cta_primary_url == (
+            "https://bms.bjptechnologies.co.tz/register?product=bms_shop&business=restaurant"
+        )
+        assert rest.cta_secondary_url == "https://bms.bjptechnologies.co.tz/pricing"
+
+
+@pytest.mark.django_db
+def test_no_product_uses_icons_missing_from_the_font():
+    """fa-display and fa-people-group exist in the CSS but have no glyph in the
+    site's Font Awesome build, so they render blank."""
+    blank = {"fa-regular fa-display", "fa-regular fa-people-group"}
+    for product in Product.objects.all():
+        assert product.icon not in blank, product.slug
+        for feature in product.features:
+            assert feature.get("icon") not in blank, (product.slug, feature["name"])

@@ -15,7 +15,8 @@ from .models import ContactEnquiry
 PRODUCT_HINT_TO_DEMO_LINE = {
     "pms": "I'd like to request a demo of PMS (Property Management System).",
     "bms": "I'd like to request a demo of Smart BMS (accounting, HR and payroll).",
-    "smart-pos": "I'd like to request a demo of Smart POS (for shops and restaurants).",
+    "smart-pos": "I'd like to request a demo of Smart POS (for shops).",
+    "smart-restaurant": "I'd like to request a demo of Smart Restaurant (for restaurants and cafés).",
     "vikundi": "I'd like to request a demo of Vikundi (VICOBA Management System).",
 }
 
