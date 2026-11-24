@@ -18,6 +18,7 @@ PRODUCT_HINT_TO_DEMO_LINE = {
     "smart-pos": "I'd like to request a demo of Smart POS (for shops).",
     "smart-restaurant": "I'd like to request a demo of Smart Restaurant (for restaurants and cafés).",
     "vikundi": "I'd like to request a demo of Vikundi (VICOBA Management System).",
+    "lms": "I'd like to book a demo of LMS (Loan Management System).",
 }
 
 

@@ -1822,3 +1822,51 @@ Confirmed the map URL itself was fine — the live page served a valid populated
 - [ ] Review the School System research artifact when the other session produces it
 
 ---
+
+## Session 27 — 2026-11-24 16:30 EAT
+
+**Goal:** Add LMS (Loan Management System) as a sixth product.
+**Branch:** feature/lms-product
+**Status:** ✅ Complete
+
+### What Was Done
+- Reviewed lms.bjptechnologies.co.tz (read-only, logged in as the developer): every module page is real; the credit bureau, banking and payment-gateway pages are connection settings, not confirmed live
+- Seeded LMS — Loan Management System (slug `lms`, order 6, accent `#6D28D9`, icon `fa-hand-holding-dollar`, 8 features) with content from the system's own module descriptions
+- "Book a demo" → `/contact/?product=lms` (prefilled message); pricing "Price on request"; no secondary button
+- Branded hero image and logo; Google profile image BJP-LMS.png (in ~/Pictures/BJP-Google-Products)
+- Home showcase lede now includes "lenders"
+- Preview approved by the developer
+
+### Files Changed
+| File | Action | Notes |
+|---|---|---|
+| apps/products/migrations/0010_seed_lms.py | Created | LMS product |
+| apps/contact/views.py | Modified | `lms` prefill line |
+| apps/main/templates/main/_products_showcase.html | Modified | Lede adds lenders |
+| static/images/products/lms/{hero.webp,logo.svg} | Created | Assets |
+| apps/products/tests/test_models.py, apps/contact/tests/test_product_prefill.py | Modified | Tests |
+
+### Migrations
+- `products.0010_seed_lms`
+- Applied: ✅ Yes (local); production via CI/CD
+
+### Tests
+- Tests written: 3 (ordering test updated)
+- Tests passing: 217 / 217
+- Coverage areas: LMS seed and CTA, no unconfirmed integration claims, contact prefill, ordering
+
+### Decisions Made
+- Decision: No screenshots of the live LMS.
+  Reason: It is a client's production system (Bejundas Financial Services) with real customer data — publishing it would breach PDPC.
+- Decision: Credit bureau, banking and payment-gateway integrations and inventory are not advertised.
+  Reason: Not confirmed connected / not relevant to lending; add when confirmed.
+- Decision: Book a demo + price on request (developer's choice); name kept as "LMS".
+
+### Blockers / Issues
+- None
+
+### Next Session Should
+- [ ] After deploy: check /products/lms/ and the six-tab showcase live
+- [ ] Developer: add LMS to the Google Business Profile with BJP-LMS.png
+
+---
